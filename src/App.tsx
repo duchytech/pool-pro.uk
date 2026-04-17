@@ -238,9 +238,11 @@ export default function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showClearTeamsConfirm, setShowClearTeamsConfirm] = useState(false);
   const [showClearHistoryConfirm, setShowClearHistoryConfirm] = useState(false);
-  const [showTeamTotals, setShowTeamTotals] = useState(false);
-  const [showRestoreDefaultsConfirm, setShowRestoreDefaultsConfirm] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showTeamTotals, setShowTeamTotals] = useState(false);
+  const [isBreakTrackingEnabled, setIsBreakTrackingEnabled] = useState(false);
+  const [currentBreakPlayerId, setCurrentBreakPlayerId] = useState<'1' | '2'>('1');
+  const [showRestoreDefaultsConfirm, setShowRestoreDefaultsConfirm] = useState(false);
   const [exportMethod, setExportMethod] = useState<'download' | 'share' | 'server'>('download');
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv');
   const [exportEmail, setExportEmail] = useState('');
@@ -351,6 +353,8 @@ export default function App() {
         if (state.userPreferences.isShotClockEnabled !== undefined) setIsShotClockEnabled(state.userPreferences.isShotClockEnabled);
         if (state.userPreferences.matchClockDuration !== undefined) setMatchClockDuration(state.userPreferences.matchClockDuration);
         if (state.userPreferences.isMatchClockEnabled !== undefined) setIsMatchClockEnabled(state.userPreferences.isMatchClockEnabled);
+        if (state.userPreferences.isBreakTrackingEnabled !== undefined) setIsBreakTrackingEnabled(state.userPreferences.isBreakTrackingEnabled);
+        if (state.userPreferences.currentBreakPlayerId !== undefined) setCurrentBreakPlayerId(state.userPreferences.currentBreakPlayerId);
         
         if (state.userPreferences.player1) {
           setPlayer1(prev => ({ 
@@ -379,6 +383,8 @@ export default function App() {
       if (state.playerPreferences) setPlayerPreferences(state.playerPreferences);
       if (state.apiConfig) setApiConfig(state.apiConfig);
       
+      if (state.userPreferences?.view !== undefined) setView(state.userPreferences.view);
+      if (state.userPreferences?.isNavVisible !== undefined) setIsNavVisible(state.userPreferences.isNavVisible);
       if (state.userPreferences?.showDeviceTime !== undefined) setShowDeviceTime(state.userPreferences.showDeviceTime);
       if (state.userPreferences?.deviceTimePosition !== undefined) setDeviceTimePosition(state.userPreferences.deviceTimePosition);
       if (state.userPreferences?.matchClockPosition !== undefined) setMatchClockPosition(state.userPreferences.matchClockPosition);
@@ -386,7 +392,7 @@ export default function App() {
       if (state.userPreferences?.finishButtonPosition !== undefined) setFinishButtonPosition(state.userPreferences.finishButtonPosition);
 
       // Finalize loading
-      setTimeout(() => setIsLoaded(true), 100);
+      setIsLoaded(true);
     } catch (error) {
       console.error('Failed to load data from localStorage:', error);
       setIsLoaded(true);
@@ -394,10 +400,10 @@ export default function App() {
   }, []);
 
   // --- Persistence (Single JSON Source) ---
-  useEffect(() => {
+  const saveState = useCallback(() => {
     if (!isLoaded) return;
 
-    const state = {
+    const stateToSave = {
       teamData: { team1Name, team2Name, team1Players, team2Players },
       gameData: { 
         matchHistory, 
@@ -424,6 +430,10 @@ export default function App() {
         isShotClockEnabled,
         matchClockDuration,
         isMatchClockEnabled,
+        isBreakTrackingEnabled,
+        currentBreakPlayerId,
+        view,
+        isNavVisible,
         showDeviceTime,
         deviceTimePosition,
         matchClockPosition,
@@ -434,15 +444,28 @@ export default function App() {
       playerPreferences,
       apiConfig
     };
-    localStorage.setItem('pool_app_state', JSON.stringify(state));
+    localStorage.setItem('pool_app_state', JSON.stringify(stateToSave));
   }, [
     isLoaded,
     team1Name, team2Name, team1Players, team2Players,
     matchHistory, player1, player2, selectedMatchIndex, shotClock, matchClock,
     shotClockDuration, isShotClockEnabled, matchClockDuration, isMatchClockEnabled,
+    isBreakTrackingEnabled, currentBreakPlayerId,
+    view, isNavVisible,
     showDeviceTime, deviceTimePosition, matchClockPosition, shotClockPosition, finishButtonPosition,
     matchupSettings, playerPreferences, apiConfig
   ]);
+
+  useEffect(() => {
+    saveState();
+  }, [saveState]);
+
+  // Window-level safety save
+  useEffect(() => {
+    const handleUnload = () => saveState();
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
+  }, [saveState]);
 
   // Sync current player preferences when they change
   useEffect(() => {
@@ -546,6 +569,12 @@ export default function App() {
     } else {
       setPlayer2(prev => ({ ...prev, score: prev.score + 1 }));
     }
+    
+    // Swap break indicator if tracking is enabled
+    if (isBreakTrackingEnabled) {
+      setCurrentBreakPlayerId(prev => prev === '1' ? '2' : '1');
+    }
+    
     resetTimer();
   };
 
@@ -1733,30 +1762,42 @@ export default function App() {
                             boxShadow: `0 0 40px -15px ${p.color}66`
                           }}
                         >
-                            {/* Mobile Score Buttons - Absolute Positioned */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                incrementScore(p.id);
-                              }}
-                              className={`sm:hidden absolute top-2 ${idx === 0 ? 'left-2' : 'right-2'} w-12 h-12 text-slate-950 rounded-xl flex items-center justify-center transition-all active:scale-95 shadow-lg z-10`}
-                              style={{ 
-                                backgroundColor: p.color,
-                                boxShadow: `0 4px 10px -2px ${p.color}66`
-                              }}
-                            >
-                              <Plus className="w-6 h-6 font-bold" />
-                            </button>
-
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                decrementScore(p.id);
-                              }}
-                              className={`sm:hidden absolute bottom-2 ${idx === 0 ? 'left-2' : 'right-2'} w-12 h-12 bg-slate-800/80 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-all active:scale-95 z-10 border border-slate-700`}
-                            >
-                              <Minus className="w-5 h-5" />
-                            </button>
+                             {/* Mobile Score Buttons - Absolute Positioned */}
+                             <button
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 incrementScore(p.id);
+                               }}
+                               className={`sm:hidden absolute top-2 ${idx === 0 ? 'right-2' : 'left-2'} w-8 h-8 text-slate-950 rounded-xl flex items-center justify-center transition-all active:scale-95 shadow-lg z-10`}
+                               style={{ 
+                                 backgroundColor: p.color,
+                                 boxShadow: `0 4px 10px -2px ${p.color}66`
+                               }}
+                             >
+                               <Plus className="w-4 h-4 font-bold" />
+                             </button>
+ 
+                             <button
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 decrementScore(p.id);
+                               }}
+                               className={`sm:hidden absolute bottom-2 ${idx === 0 ? 'right-2' : 'left-2'} w-8 h-8 bg-slate-800/80 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-all active:scale-95 z-10 border border-slate-700`}
+                             >
+                               <Minus className="w-3 h-3" />
+                             </button>
+ 
+                             {/* White Ball Break Indicator */}
+                             {isBreakTrackingEnabled && (
+                               <button
+                                 onClick={(e) => {
+                                   e.stopPropagation();
+                                   setCurrentBreakPlayerId(p.id as '1' | '2');
+                                 }}
+                                 className={`absolute top-2 ${idx === 0 ? 'left-2' : 'right-2'} w-8 h-8 rounded-full border-2 transition-all duration-300 z-10 flex items-center justify-center ${currentBreakPlayerId === p.id ? 'bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-110' : 'bg-slate-700/50 border-slate-600 scale-90 opacity-40'}`}
+                                 title="Break Indicator"
+                               />
+                             )}
 
                           <div className="flex flex-col items-center gap-0 sm:gap-6">
                           {isEditingNames ? (
@@ -1804,13 +1845,13 @@ export default function App() {
                                 e.stopPropagation();
                                 incrementScore(p.id);
                               }}
-                              className="flex-[2] h-8 sm:h-[min(4rem,10vh)] text-slate-950 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-lg"
+                              className="flex-1 h-8 sm:h-[min(4rem,10vh)] text-slate-950 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-lg"
                               style={{ 
                                 backgroundColor: p.color,
                                 boxShadow: `0 10px 15px -3px ${p.color}33`
                               }}
                             >
-                              <Plus className="w-5 h-5 sm:w-6 sm:h-6 font-bold" />
+                              <Plus className="w-4 h-4 sm:w-5 sm:h-5 font-bold" />
                             </button>
                           </div>
                         </div>
@@ -2448,6 +2489,33 @@ export default function App() {
                         </div>
                       </div>
                     )}
+                  </div>
+                </section>
+
+                <section className="space-y-6">
+                  <h3 
+                    className="text-[10px] font-black uppercase tracking-widest pb-2 border-b-2"
+                    style={{ borderImage: `linear-gradient(to right, ${player1.color} 50%, ${player2.color} 50%) 1`, color: player1.color }}
+                  >
+                    Gameplay Features
+                  </h3>
+                  <div 
+                    className="bg-black/80 backdrop-blur-md border-2 rounded-[32px] p-8 space-y-8 shadow-xl" 
+                    style={{ borderColor: player1.color }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xl font-black text-slate-200 uppercase tracking-tight">Break Tracking</p>
+                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Display a "white ball" break indicator that alternates with scores.</p>
+                      </div>
+                      <button 
+                        onClick={() => setIsBreakTrackingEnabled(!isBreakTrackingEnabled)}
+                        className={`w-14 h-7 rounded-full transition-colors relative`}
+                        style={{ backgroundColor: isBreakTrackingEnabled ? player1.color : '#334155' }}
+                      >
+                        <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${isBreakTrackingEnabled ? 'left-8' : 'left-1'}`} />
+                      </button>
+                    </div>
                   </div>
                 </section>
 
