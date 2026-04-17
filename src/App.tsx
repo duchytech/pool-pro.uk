@@ -1924,10 +1924,10 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="grid grid-cols-2 gap-4 sm:gap-10">
                 {/* Team 1 Setup */}
-                <div className="space-y-8">
-                  <div className="space-y-4">
+                <div className="space-y-4 sm:space-y-8">
+                  <div className="space-y-2 sm:space-y-4">
                     <div className="flex items-center justify-between">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Team 1 Name</label>
                       <Users className="w-4 h-4 text-slate-600" />
@@ -1936,49 +1936,51 @@ export default function App() {
                       value={team1Name} 
                       onChange={(e) => updateTeamData(e.target.value.toUpperCase(), team1Players, team2Name, team2Players)}
                       onFocus={(e) => e.target.select()}
-                      className="w-full bg-black border-2 rounded-2xl px-6 py-4 text-2xl font-black text-slate-100 focus:outline-none uppercase transition-all shadow-xl" 
-                      style={{ borderColor: player1.color }}
-                      placeholder="TEAM 1 NAME"
+                      className="w-full bg-black border-2 rounded-xl sm:rounded-2xl px-3 sm:px-6 py-2 sm:py-4 text-sm sm:text-2xl font-black text-slate-100 focus:outline-none uppercase transition-all shadow-xl" 
+                      style={{ borderColor: player1.color, fontSize: '16px' }}
+                      placeholder="TEAM 1"
                     />
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Team 1 Players (In Order)</label>
-                    <div className="space-y-3">
+                  <div className="space-y-3 sm:space-y-4">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Players</label>
+                    <div className="space-y-2 sm:space-y-3">
                       {team1Players.map((player, idx) => (
-                        <div key={idx} className="flex gap-3 group">
+                        <div key={idx} className="flex gap-2 sm:gap-3 group">
                           <div 
-                            className="w-10 h-12 flex items-center justify-center text-xs font-black bg-black border-2 rounded-xl"
+                            className="w-8 sm:w-10 h-10 sm:h-12 flex items-center justify-center text-[10px] sm:text-xs font-black bg-black border-2 rounded-lg sm:rounded-xl"
                             style={{ borderColor: player1.color + '33', color: player1.color }}
                           >
                             {idx + 1}
                           </div>
-                          <input 
-                            value={player}
-                            autoFocus={idx === team1Players.length - 1 && player === ''}
-                            onChange={(e) => {
-                              const newPlayers = [...team1Players];
-                              newPlayers[idx] = e.target.value.toUpperCase();
-                              updateTeamData(team1Name, newPlayers, team2Name, team2Players);
-                            }}
-                            onFocus={(e) => e.target.select()}
-                            className="flex-1 bg-black/50 border rounded-xl px-4 py-2 text-slate-100 focus:outline-none uppercase font-bold transition-all"
-                            style={{ borderColor: player1.color + '22' }}
-                            placeholder={`PLAYER ${idx + 1}`}
-                          />
-                          <button 
-                            onClick={() => {
-                              const newPlayers = team1Players.filter((_, i) => i !== idx);
-                              updateTeamData(team1Name, newPlayers, team2Name, team2Players);
-                            }}
-                            className="p-3 text-slate-600 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                          >
-                            <X className="w-5 h-5" />
-                          </button>
+                          <div className="relative flex-1 group">
+                            <input 
+                              value={player}
+                              autoFocus={idx === team1Players.length - 1 && player === ''}
+                              onChange={(e) => {
+                                const newPlayers = [...team1Players];
+                                newPlayers[idx] = e.target.value.toUpperCase();
+                                updateTeamData(team1Name, newPlayers, team2Name, team2Players);
+                              }}
+                              onFocus={(e) => e.target.select()}
+                              className="w-full bg-black/50 border rounded-lg sm:rounded-xl pl-2 sm:pl-4 pr-10 sm:pr-14 py-2 text-slate-100 focus:outline-none uppercase font-bold transition-all"
+                              style={{ borderColor: player1.color + '22', fontSize: '16px' }}
+                              placeholder={`P${idx + 1}`}
+                            />
+                            <button 
+                              onClick={() => {
+                                const newPlayers = team1Players.filter((_, i) => i !== idx);
+                                updateTeamData(team1Name, newPlayers, team2Name, team2Players);
+                              }}
+                              className="absolute right-0 top-0 h-full px-2 sm:px-4 text-red-500 hover:bg-red-500/10 rounded-r-lg sm:rounded-r-xl transition-all"
+                            >
+                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                       <button 
                         onClick={() => updateTeamData(team1Name, [...team1Players, ''], team2Name, team2Players)}
-                        className="w-full py-4 border-2 border-dashed rounded-2xl text-slate-500 transition-all flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest"
+                        className="w-full py-2 sm:py-4 border-2 border-dashed rounded-xl sm:rounded-2xl text-slate-500 transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm font-black uppercase tracking-widest"
                         style={{ 
                           borderColor: player1.color + '33', 
                           color: player1.color,
@@ -1993,16 +1995,16 @@ export default function App() {
                           e.currentTarget.style.borderColor = player1.color + '33';
                         }}
                       >
-                        <Plus className="w-4 h-4" />
-                        Add Player
+                        <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                        Add
                       </button>
                     </div>
                   </div>
                 </div>
 
                 {/* Team 2 Setup */}
-                <div className="space-y-8">
-                  <div className="space-y-4">
+                <div className="space-y-4 sm:space-y-8">
+                  <div className="space-y-2 sm:space-y-4">
                     <div className="flex items-center justify-between">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Team 2 Name</label>
                       <Users className="w-4 h-4 text-slate-600" />
@@ -2011,49 +2013,51 @@ export default function App() {
                       value={team2Name} 
                       onChange={(e) => updateTeamData(team1Name, team1Players, e.target.value.toUpperCase(), team2Players)}
                       onFocus={(e) => e.target.select()}
-                      className="w-full bg-black border-2 rounded-2xl px-6 py-4 text-2xl font-black text-slate-100 focus:outline-none uppercase transition-all shadow-xl" 
-                      style={{ borderColor: player2.color }}
-                      placeholder="TEAM 2 NAME"
+                      className="w-full bg-black border-2 rounded-xl sm:rounded-2xl px-3 sm:px-6 py-2 sm:py-4 text-sm sm:text-2xl font-black text-slate-100 focus:outline-none uppercase transition-all shadow-xl" 
+                      style={{ borderColor: player2.color, fontSize: '16px' }}
+                      placeholder="TEAM 2"
                     />
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Team 2 Players (In Order)</label>
-                    <div className="space-y-3">
+                  <div className="space-y-3 sm:space-y-4">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Players</label>
+                    <div className="space-y-2 sm:space-y-3">
                       {team2Players.map((player, idx) => (
-                        <div key={idx} className="flex gap-3 group">
+                        <div key={idx} className="flex gap-2 sm:gap-3 group">
                           <div 
-                            className="w-10 h-12 flex items-center justify-center text-xs font-black bg-black border-2 rounded-xl"
+                            className="w-8 sm:w-10 h-10 sm:h-12 flex items-center justify-center text-[10px] sm:text-xs font-black bg-black border-2 rounded-lg sm:rounded-xl"
                             style={{ borderColor: player2.color + '33', color: player2.color }}
                           >
                             {idx + 1}
                           </div>
-                          <input 
-                            value={player}
-                            autoFocus={idx === team2Players.length - 1 && player === ''}
-                            onChange={(e) => {
-                              const newPlayers = [...team2Players];
-                              newPlayers[idx] = e.target.value.toUpperCase();
-                              updateTeamData(team1Name, team1Players, team2Name, newPlayers);
-                            }}
-                            onFocus={(e) => e.target.select()}
-                            className="flex-1 bg-black/50 border rounded-xl px-4 py-2 text-slate-100 focus:outline-none uppercase font-bold transition-all"
-                            style={{ borderColor: player2.color + '22' }}
-                            placeholder={`PLAYER ${idx + 1}`}
-                          />
-                          <button 
-                            onClick={() => {
-                              const newPlayers = team2Players.filter((_, i) => i !== idx);
-                              updateTeamData(team1Name, team1Players, team2Name, newPlayers);
-                            }}
-                            className="p-3 text-slate-600 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                          >
-                            <X className="w-5 h-5" />
-                          </button>
+                          <div className="relative flex-1 group">
+                            <input 
+                              value={player}
+                              autoFocus={idx === team2Players.length - 1 && player === ''}
+                              onChange={(e) => {
+                                const newPlayers = [...team2Players];
+                                newPlayers[idx] = e.target.value.toUpperCase();
+                                updateTeamData(team1Name, team1Players, team2Name, newPlayers);
+                              }}
+                              onFocus={(e) => e.target.select()}
+                              className="w-full bg-black/50 border rounded-lg sm:rounded-xl pl-2 sm:pl-4 pr-10 sm:pr-14 py-2 text-slate-100 focus:outline-none uppercase font-bold transition-all"
+                              style={{ borderColor: player2.color + '22', fontSize: '16px' }}
+                              placeholder={`P${idx + 1}`}
+                            />
+                            <button 
+                              onClick={() => {
+                                const newPlayers = team2Players.filter((_, i) => i !== idx);
+                                updateTeamData(team1Name, team1Players, team2Name, newPlayers);
+                              }}
+                              className="absolute right-0 top-0 h-full px-2 sm:px-4 text-red-500 hover:bg-red-500/10 rounded-r-lg sm:rounded-r-xl transition-all"
+                            >
+                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                       <button 
                         onClick={() => updateTeamData(team1Name, team1Players, team2Name, [...team2Players, ''])}
-                        className="w-full py-4 border-2 border-dashed rounded-2xl text-slate-500 transition-all flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest"
+                        className="w-full py-2 sm:py-4 border-2 border-dashed rounded-xl sm:rounded-2xl text-slate-500 transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm font-black uppercase tracking-widest"
                         style={{ 
                           borderColor: player2.color + '33', 
                           color: player2.color,
@@ -2068,8 +2072,8 @@ export default function App() {
                           e.currentTarget.style.borderColor = player2.color + '33';
                         }}
                       >
-                        <Plus className="w-4 h-4" />
-                        Add Player
+                        <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                        Add
                       </button>
                     </div>
                   </div>
@@ -2084,17 +2088,21 @@ export default function App() {
                 <div className="bg-black border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
                   <div className="overflow-x-auto scrollbar-hide">
                     <table 
-                      className="w-full text-left border-collapse min-w-[440px] sm:min-w-0"
+                      className="w-full text-left border-collapse table-fixed"
                     >
                       <thead>
                         <tr className="bg-slate-900/80 border-b-2 border-slate-800 font-black">
-                          <th className="hidden sm:table-cell px-3 sm:px-6 py-4 text-[15px] uppercase tracking-[0.2em] text-slate-400">Match</th>
-                          <th className="px-1.5 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-white">{team1Name || 'TEAM A'}</th>
-                          <th className="px-1 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-slate-600 text-center w-4 sm:w-8">VS</th>
-                          <th className="px-1.5 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-white">{team2Name || 'TEAM B'}</th>
-                          <th className="px-1.5 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-slate-400">Result</th>
-                          <th className="hidden sm:table-cell px-3 sm:px-6 py-4 text-[15px] uppercase tracking-widest text-slate-400">Clock</th>
-                          <th className="px-1.5 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-slate-400 text-right w-10 sm:w-auto">Action</th>
+                          <th className="hidden sm:table-cell px-3 sm:px-6 py-4 text-[15px] uppercase tracking-[0.2em] text-slate-400 w-[8%]">No.</th>
+                          <th className="px-1 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-white w-[27%] sm:w-[22%]">
+                            <div className="truncate">{team1Name || 'TEAM A'}</div>
+                          </th>
+                          <th className="px-0.5 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-slate-600 text-center w-[12%] sm:w-[8%]">VS</th>
+                          <th className="px-1 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-white w-[27%] sm:w-[22%]">
+                            <div className="truncate">{team2Name || 'TEAM B'}</div>
+                          </th>
+                          <th className="px-1 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-slate-400 w-[24%] sm:w-[17%]">Result</th>
+                          <th className="px-1 sm:px-6 py-4 text-xs sm:text-[15px] uppercase tracking-widest text-slate-400 text-right w-[10%] sm:w-[8%]">Clear Score</th>
+                          <th className="hidden sm:table-cell px-3 sm:px-6 py-4 text-[15px] uppercase tracking-widest text-slate-400 w-[15%]">TIMERS</th>
                         </tr>
                       </thead>
                     <tbody>
@@ -2122,14 +2130,14 @@ export default function App() {
                                 className={`group cursor-pointer transition-colors hover:bg-emerald-500/5 ${selectedMatchIndex === idx ? 'bg-emerald-500/10' : ''}`}
                               >
                                 <td className="hidden sm:table-cell px-3 sm:px-6 py-4 text-xs font-black text-slate-600">#{idx + 1}</td>
-                                <td className="px-2 sm:px-6 py-4 text-[10px] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors max-w-[80px] sm:max-w-none truncate">
+                                <td className="px-1 sm:px-6 py-4 text-[10px] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors truncate">
                                   {p1 || <span className="text-slate-700 italic">EMPTY</span>}
                                 </td>
-                                <td className="px-1 sm:px-6 py-4 text-center text-slate-700 font-black text-[8px] w-4 sm:w-8">VS</td>
-                                <td className="px-2 sm:px-6 py-4 text-[10px] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors max-w-[80px] sm:max-w-none truncate">
+                                <td className="px-0.5 sm:px-6 py-4 text-center text-slate-700 font-black text-[8px]">VS</td>
+                                <td className="px-1 sm:px-6 py-4 text-[10px] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors truncate">
                                   {p2 || <span className="text-slate-700 italic">EMPTY</span>}
                                 </td>
-                                <td className="px-2 sm:px-6 py-4">
+                                <td className="px-1 sm:px-6 py-4">
                                   {lastMatch ? (
                                     <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2">
                                       <span className={`text-[8px] sm:text-xs font-bold px-1 py-0.5 rounded w-fit ${lastMatch.winner === p1Name ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>
@@ -2141,17 +2149,7 @@ export default function App() {
                                     <span className="text-[8px] text-slate-700 font-bold uppercase">NONE</span>
                                   )}
                                 </td>
-                                <td className="hidden sm:table-cell px-3 sm:px-6 py-4">
-                                  {lastMatch && (lastMatch.shotClockSetting || lastMatch.matchClockRemaining !== undefined) ? (
-                                    <div className="flex flex-col gap-0.5">
-                                      {lastMatch.shotClockSetting && <span className="text-[9px] font-bold text-slate-500">SHOT: {lastMatch.shotClockSetting}S</span>}
-                                      {lastMatch.matchClockRemaining !== undefined && <span className="text-[9px] font-bold text-slate-500">MATCH: {formatTime(lastMatch.matchClockRemaining)}</span>}
-                                    </div>
-                                  ) : (
-                                    <span className="text-[10px] text-slate-600 font-bold uppercase">-</span>
-                                  )}
-                                </td>
-                                <td className="px-2 sm:px-6 py-4 text-right w-10 sm:w-auto">
+                                <td className="px-1 sm:px-6 py-4 text-right w-10 sm:w-auto">
                                   {lastMatch && (
                                     <button 
                                       onClick={(e) => {
@@ -2165,40 +2163,54 @@ export default function App() {
                                     </button>
                                   )}
                                 </td>
+                                <td className="hidden sm:table-cell px-3 sm:px-6 py-4">
+                                  {lastMatch && (lastMatch.shotClockSetting || lastMatch.matchClockRemaining !== undefined) ? (
+                                    <div className="flex flex-col gap-0.5">
+                                      {lastMatch.shotClockSetting && <span className="text-[9px] font-bold text-slate-500">SHOT: {lastMatch.shotClockSetting}S</span>}
+                                      {lastMatch.matchClockRemaining !== undefined && <span className="text-[9px] font-bold text-slate-500">MATCH: {formatTime(lastMatch.matchClockRemaining)}</span>}
+                                    </div>
+                                  ) : (
+                                    <span className="text-[10px] text-slate-600 font-bold uppercase">-</span>
+                                  )}
+                                </td>
                               </tr>
                             );
                           })}
                           {/* Totals Row */}
                           <tr className="bg-slate-900/80 border-t-2 border-slate-800 font-black">
                             <td className="hidden sm:table-cell px-3 sm:px-6 py-4 text-[10px] uppercase tracking-[0.2em] text-emerald-500">Total Score</td>
-                            <td className="px-2 sm:px-6 py-4">
+                            <td className="px-1 sm:px-6 py-4">
                               <div className="flex flex-col">
                                 <span className="text-base sm:text-2xl text-emerald-400 tabular-nums">{teamTotals.t1}</span>
                                 <span className="text-[6px] text-slate-500 uppercase tracking-tighter truncate max-w-[60px] sm:max-w-none">{team1Name}</span>
                               </div>
                             </td>
-                            <td className="px-1 sm:px-6 py-4 text-center text-slate-700 font-black text-[8px] w-4 sm:w-8">SUM</td>
-                            <td className="px-2 sm:px-6 py-4">
+                            <td className="px-0.5 sm:px-6 py-4 text-center text-slate-700 font-black text-[8px] w-4 sm:w-8">SUM</td>
+                            <td className="px-1 sm:px-6 py-4">
                               <div className="flex flex-col">
                                 <span className="text-base sm:text-2xl text-emerald-400 tabular-nums">{teamTotals.t2}</span>
                                 <span className="text-[6px] text-slate-500 uppercase tracking-tighter truncate max-w-[60px] sm:max-w-none">{team2Name}</span>
                               </div>
                             </td>
-                            <td colSpan={windowSize.width < 640 ? 1 : 2} className="px-2 sm:px-6 py-4">
+                            <td colSpan={windowSize.width < 640 ? 1 : 2} className="px-1 sm:px-6 py-4">
                               <div className="flex flex-col items-end">
                                 <span className="text-[6px] sm:text-[10px] text-slate-600 uppercase font-bold">Overall Lead</span>
-                                <span className="text-[9px] sm:text-sm font-black text-slate-100 truncate max-w-[100px] sm:max-w-none">
+                                <span className="text-[9px] sm:text-sm font-black text-slate-100 truncate max-w-full block">
                                   {teamTotals.t1 === teamTotals.t2 ? 'TIED' : 
                                    teamTotals.t1 > teamTotals.t2 ? `${team1Name} (+${teamTotals.t1 - teamTotals.t2})` : 
                                    `${team2Name} (+${teamTotals.t2 - teamTotals.t1})`}
                                 </span>
                               </div>
                             </td>
-                            <td className="px-2 sm:px-6 py-4 text-right w-10 sm:w-auto">
-                              <div className="inline-flex w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-500/10 items-center justify-center border border-emerald-500/20 shrink-0">
+                            <td className="px-1 sm:px-6 py-4 text-right w-10 sm:w-auto">
+                              <button 
+                                onClick={() => setShowTeamTotals(true)}
+                                className="inline-flex w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-500/10 items-center justify-center border border-emerald-500/20 shrink-0 active:scale-95 transition-all hover:bg-emerald-500/20"
+                              >
                                 <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-                              </div>
+                              </button>
                             </td>
+                            <td className="hidden sm:table-cell px-3 sm:px-6 py-4" />
                           </tr>
                         </>
                       )}
@@ -2874,10 +2886,10 @@ export default function App() {
           {showTeamTotals && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
               <motion.div 
-                initial={{ scale: 0.8, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.8, opacity: 0, y: 20 }}
-                className="bg-black border-2 p-10 rounded-[40px] max-w-2xl w-full space-y-10 text-center"
+                initial={{ scale: !deviceInfo.isDesktop ? 0.5 : 0.8, opacity: 0, y: 20 }}
+                animate={{ scale: !deviceInfo.isDesktop ? 0.7 : 1, opacity: 1, y: 0 }}
+                exit={{ scale: !deviceInfo.isDesktop ? 0.5 : 0.8, opacity: 0, y: 20 }}
+                className="bg-black border-2 p-6 sm:p-10 rounded-[30px] sm:rounded-[40px] max-w-2xl w-full space-y-6 sm:space-y-10 text-center"
                 style={{ 
                   borderImage: `linear-gradient(to right, ${player1.color} 50%, ${player2.color} 50%) 1`,
                   boxShadow: `0 0 50px ${player1.color}11`
@@ -2885,24 +2897,24 @@ export default function App() {
               >
                 <div className="space-y-2">
                   <div className="flex justify-center">
-                    <div className="p-4 rounded-full" style={{ backgroundColor: `${player1.color}11` }}>
-                      <Trophy className="w-12 h-12" style={{ color: player1.color }} />
+                    <div className="p-3 sm:p-4 rounded-full" style={{ backgroundColor: `${player1.color}11` }}>
+                      <Trophy className="w-8 h-8 sm:w-12 sm:h-12" style={{ color: player1.color }} />
                     </div>
                   </div>
-                  <h2 className="text-5xl font-black uppercase tracking-tighter text-white">Team Totals</h2>
-                  <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Final Session Results</p>
+                  <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter text-white">Team Totals</h2>
+                  <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Final Session Results</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 items-center">
-                  <div className="space-y-4">
-                    <p className="text-xl font-black uppercase tracking-tight truncate" style={{ color: player1.color }}>{team1Name || 'TEAM 1'}</p>
-                    <p className="text-8xl font-black text-white tabular-nums">
+                <div className="grid grid-cols-2 gap-4 sm:gap-8 items-center">
+                  <div className="space-y-2 sm:space-y-4">
+                    <p className="text-sm sm:text-xl font-black uppercase tracking-tight truncate px-1" style={{ color: player1.color }}>{team1Name || 'TEAM 1'}</p>
+                    <p className="text-4xl sm:text-8xl font-black text-white tabular-nums">
                       {teamTotals.t1}
                     </p>
                   </div>
-                  <div className="space-y-4">
-                    <p className="text-xl font-black uppercase tracking-tight truncate" style={{ color: player2.color }}>{team2Name || 'TEAM 2'}</p>
-                    <p className="text-8xl font-black text-white tabular-nums">
+                  <div className="space-y-2 sm:space-y-4">
+                    <p className="text-sm sm:text-xl font-black uppercase tracking-tight truncate px-1" style={{ color: player2.color }}>{team2Name || 'TEAM 2'}</p>
+                    <p className="text-4xl sm:text-8xl font-black text-white tabular-nums">
                       {teamTotals.t2}
                     </p>
                   </div>
@@ -2913,7 +2925,7 @@ export default function App() {
                     setShowTeamTotals(false);
                     setView('teams');
                   }}
-                  className="w-full h-20 text-slate-950 rounded-3xl font-black text-2xl uppercase tracking-widest transition-all active:scale-95"
+                  className="w-full h-14 sm:h-20 text-slate-950 rounded-2xl sm:rounded-3xl font-black text-lg sm:text-2xl uppercase tracking-widest transition-all active:scale-95"
                   style={{ 
                     backgroundImage: `linear-gradient(to right, ${player1.color}, ${player2.color})`,
                     boxShadow: `0 10px 20px ${player1.color}33`
