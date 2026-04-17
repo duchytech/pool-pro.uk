@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --sidebar-width: 48px;
+  --gameplay-width: calc(100vw - 96px);
+  --circle-offset: calc(100% + 2rem);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --sidebar-width: 80px;
+    --gameplay-width: calc(100vw - 160px);
+    --circle-offset: calc(100% + 2rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --sidebar-width: 120px;
+    --gameplay-width: min(1100px, calc(100vw - 240px));
+    --circle-offset: calc((100vw - var(--gameplay-width)) / 4 + 4.5rem);
+  }
+}
+
+@layer base {
+  html, body {
+    @apply text-slate-100 antialiased;
+    background: transparent !important;
+  }
+}
+
+@layer utilities {
+  .responsive-zoom {
+    @apply transition-all duration-500 origin-top;
+  }
+
+  /* Mobile Portrait */
+  @media (max-width: 639px) and (orientation: portrait) {
+    .responsive-zoom {
+      @apply origin-top;
+    }
+    .nav-zoom {
+      @apply origin-top-left w-full;
+    }
+    .bar-zoom {
+      @apply origin-bottom;
+    }
+    .gameplay-card {
+      height: 28vh !important;
+    }
+  }
+
+  /* Mobile Landscape */
+  @media (max-width: 950px) and (orientation: landscape) {
+    .responsive-zoom {
+      @apply origin-top;
+    }
+    .nav-zoom {
+      @apply origin-top-left w-full;
+    }
+    .bar-zoom {
+      @apply origin-bottom;
+    }
+    .gameplay-card {
+      height: 65vh !important;
+      min-height: 120px !important;
+    }
+  }
+
+  /* Tablet Landscape */
+  @media (min-width: 951px) and (max-width: 1180px) and (orientation: landscape) {
+    .responsive-zoom {
+      @apply origin-top;
+    }
+    .nav-zoom {
+      @apply origin-top-left w-full;
+    }
+    .bar-zoom {
+      @apply origin-bottom;
+    }
+  }
+}
+
+/* Custom scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-950;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+}
+
+  .vertical-text {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
