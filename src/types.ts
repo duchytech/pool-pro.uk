@@ -19,6 +19,8 @@ export interface MatchupSettings {
     bgColor: string;
     screenColor: string;
   };
+  score1?: number;
+  score2?: number;
 }
 
 export interface MatchHistoryEntry {
