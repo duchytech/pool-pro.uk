@@ -53,3 +53,50 @@ export const BACKGROUND_COLORS = [
   { name: 'Pink 900', value: '#831843' },
   { name: 'Rose 900', value: '#881337' },
 ];
+
+export const POOL_BALLS = [
+  { number: 1, name: 'Yellow', value: '#FFD700', textColor: '#000000' },
+  { number: 2, name: 'Blue', value: '#0000FF', textColor: '#FFFFFF' },
+  { number: 3, name: 'Red', value: '#FF0000', textColor: '#FFFFFF' },
+  { number: 4, name: 'Purple', value: '#800080', textColor: '#FFFFFF' },
+  { number: 5, name: 'Orange', value: '#FFA500', textColor: '#FFFFFF' },
+  { number: 6, name: 'Green', value: '#008000', textColor: '#FFFFFF' },
+  { number: 7, name: 'Maroon', value: '#800000', textColor: '#FFFFFF' },
+  { number: 8, name: 'Black', value: '#000000', textColor: '#FFFFFF' },
+  { number: 9, name: 'Yellow Stripe', value: '#FFD700', textColor: '#000000', isStripe: true },
+  { number: 10, name: 'Blue Stripe', value: '#0000FF', textColor: '#000000', isStripe: true },
+  { number: 11, name: 'Red Stripe', value: '#FF0000', textColor: '#000000', isStripe: true },
+  { number: 12, name: 'Purple Stripe', value: '#800080', textColor: '#000000', isStripe: true },
+  { number: 13, name: 'Orange Stripe', value: '#FFA500', textColor: '#000000', isStripe: true },
+  { number: 14, name: 'Green Stripe', value: '#008000', textColor: '#000000', isStripe: true },
+  { number: 15, name: 'Maroon Stripe', value: '#800000', textColor: '#000000', isStripe: true },
+];
+
+export const CLOTH_COLORS = [
+  { name: 'Tournament Blue', value: '#2A52BE' },
+  { name: 'Tournament Green', value: '#006400' },
+  { name: 'English Red', value: '#8B0000' },
+  { name: 'Slate Grey', value: '#708090' },
+  { name: 'Electric Blue', value: '#00FFFF' },
+  { name: 'Tan', value: '#D2B48C' },
+  { name: 'Black', value: '#000000' },
+  { name: 'Purple Haze', value: '#4B0082' },
+];
+
+export const SPEED_CLOTH_COLORS = [
+  { name: 'Powder Blue', value: '#B0E0E6' },
+  { name: 'Simonis Green', value: '#2E8B57' },
+  { name: 'Petrol Blue', value: '#005F6B' },
+  { name: 'Shark Grey', value: '#696969' },
+  { name: 'Burgundy', value: '#800020' },
+  { name: 'Camel', value: '#C19A6B' },
+];
+
+export const DIAL_COLORS = [
+  { name: 'Carbon Black', value: '#1A1A1A' },
+  { name: 'Forged Grey', value: '#333333' },
+  { name: 'Silver Streak', value: '#C0C0C0' },
+  { name: 'Stealth Blue', value: '#1B263B' },
+  { name: 'Racing Red', value: '#A01A1A' },
+  { name: 'Neon Green', value: '#39FF14' },
+];

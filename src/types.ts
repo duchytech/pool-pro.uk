@@ -6,6 +6,8 @@ export interface Player {
   color: string;
   bgColor: string;
   screenColor: string;
+  bgStyle?: 'default' | 'balls' | 'cloth';
+  screenStyle?: 'default' | 'balls' | 'cloth';
 }
 
 export interface MatchupSettings {
@@ -23,9 +25,23 @@ export interface MatchupSettings {
   score2?: number;
 }
 
+export interface FrameDetail {
+  frameNumber: number;
+  startTime?: string;
+  timestamp: string;
+  score1: number;
+  score2: number;
+  breakerId: string;
+  breakerName: string;
+  winnerId?: string;
+  winnerName?: string;
+  duration?: number; // in seconds
+}
+
 export interface MatchHistoryEntry {
   id: string;
   date: string;
+  startTime?: string;
   player1: string;
   player2: string;
   team1?: string;
@@ -35,4 +51,5 @@ export interface MatchHistoryEntry {
   winner: string;
   shotClockSetting?: number;
   matchClockRemaining?: number;
+  frameDetails?: FrameDetail[];
 }

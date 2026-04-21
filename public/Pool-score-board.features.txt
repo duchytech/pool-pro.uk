@@ -1,0 +1,21 @@
+Pool-score-board
+
+To do features
+
+persist all data over refreshes - save json to browser with all settings and team game data inc timestamps shotclocks colours etc
+colour picker to be horizontal in landscape mode
+share icon on export button - which then opens a menu with radio buttons for:-
+Download
+launch mobile share
+email to (auto select textbox for user to enter email)
+upload to server (greyed out for now)
+add user settings to the data export along with game data
+add delete row button on scorecard (small icon at the end of each line works well)(dont foget the confirmation)
+
+maybe change colour picker button for settings button - then add server settings
+Save all game dat and settings to browser 
+reload from browser on refresh - restore user settings and game data
+new game modes - Singles (just use player names)
+Team mode - 6 Singles & 2 Doubles & 6 Singles
+Doubles mode - display pairs of names each side rather than just one player name
+
