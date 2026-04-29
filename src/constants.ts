@@ -55,21 +55,30 @@ export const BACKGROUND_COLORS = [
 ];
 
 export const POOL_BALLS = [
-  { number: 1, name: 'Yellow', value: '#FFD700', textColor: '#000000' },
-  { number: 2, name: 'Blue', value: '#0000FF', textColor: '#FFFFFF' },
-  { number: 3, name: 'Red', value: '#FF0000', textColor: '#FFFFFF' },
-  { number: 4, name: 'Purple', value: '#800080', textColor: '#FFFFFF' },
-  { number: 5, name: 'Orange', value: '#FFA500', textColor: '#FFFFFF' },
-  { number: 6, name: 'Green', value: '#008000', textColor: '#FFFFFF' },
-  { number: 7, name: 'Maroon', value: '#800000', textColor: '#FFFFFF' },
-  { number: 8, name: 'Black', value: '#000000', textColor: '#FFFFFF' },
-  { number: 9, name: 'Yellow Stripe', value: '#FFD700', textColor: '#000000', isStripe: true },
-  { number: 10, name: 'Blue Stripe', value: '#0000FF', textColor: '#000000', isStripe: true },
-  { number: 11, name: 'Red Stripe', value: '#FF0000', textColor: '#000000', isStripe: true },
-  { number: 12, name: 'Purple Stripe', value: '#800080', textColor: '#000000', isStripe: true },
-  { number: 13, name: 'Orange Stripe', value: '#FFA500', textColor: '#000000', isStripe: true },
-  { number: 14, name: 'Green Stripe', value: '#008000', textColor: '#000000', isStripe: true },
-  { number: 15, name: 'Maroon Stripe', value: '#800000', textColor: '#000000', isStripe: true },
+  // REDS
+  { number: 3, name: 'Red', value: '#FF0000', image: new URL('./assets/Pool_Balls/red_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/red_poolball_thumb.png', import.meta.url).href },
+  { number: 11, name: 'Redish', value: '#F87171', image: new URL('./assets/Pool_Balls/redish_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/redish_poolball_thumb.png', import.meta.url).href },
+  { number: 7, name: 'Dark Red', value: '#7F1D1D', image: new URL('./assets/Pool_Balls/red_dark_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/red_dark_poolball_thumb.png', import.meta.url).href },
+  // ORANGES
+  { number: 16, name: 'Bright Orange', value: '#FF8C00', image: new URL('./assets/Pool_Balls/orange_bright_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/orange_light_poolball_thumb.png', import.meta.url).href },
+  { number: 5, name: 'Orange', value: '#FFA500', image: new URL('./assets/Pool_Balls/orange_light_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/orange_light_poolball_thumb.png', import.meta.url).href },
+  { number: 13, name: 'Dark Orange', value: '#7C2D12', image: new URL('./assets/Pool_Balls/orange_dark_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/orange_dark_poolball_thumb.png', import.meta.url).href },
+  // YELLOWS
+  { number: 15, name: 'Bright Yellow', value: '#FFFF00', image: new URL('./assets/Pool_Balls/yellow_bright_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/yellow_poolball_thumb.png', import.meta.url).href },
+  { number: 1, name: 'Yellow', value: '#FFD700', image: new URL('./assets/Pool_Balls/yellow_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/yellow_poolball_thumb.png', import.meta.url).href },
+  // GREENS
+  { number: 18, name: 'Bright Green', value: '#00FF00', image: new URL('./assets/Pool_Balls/green_bright_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/green_poolball_thumb.png', import.meta.url).href },
+  { number: 6, name: 'Green', value: '#008000', image: new URL('./assets/Pool_Balls/green_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/green_poolball_thumb.png', import.meta.url).href },
+  // BLUES
+  { number: 2, name: 'Blue', value: '#0000FF', image: new URL('./assets/Pool_Balls/dark_blue_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/dark_blue_poolball_thumb.png', import.meta.url).href },
+  // PURPLES / PINKS
+  { number: 10, name: 'Lilac', value: '#D8B4FE', image: new URL('./assets/Pool_Balls/lilac_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/lilac_poolball_thumb.png', import.meta.url).href },
+  { number: 4, name: 'Purple', value: '#800080', image: new URL('./assets/Pool_Balls/dark_purple_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/dark_purple_poolball_thumb.png', import.meta.url).href },
+  { number: 17, name: 'Bright Pink', value: '#FF69B4', image: new URL('./assets/Pool_Balls/pink_bright_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/pink_poolball_thumb.png', import.meta.url).href },
+  { number: 9, name: 'Pink', value: '#F472B6', image: new URL('./assets/Pool_Balls/pink_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/pink_poolball_thumb.png', import.meta.url).href },
+  // NEUTRALS
+  { number: 12, name: 'White', value: '#FFFFFF', image: new URL('./assets/Pool_Balls/white_poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/white_poolball_thumb.png', import.meta.url).href },
+  { number: 14, name: 'Black', value: '#111111', image: new URL('./assets/Pool_Balls/black-Poolball.png', import.meta.url).href, thumbnail: new URL('./assets/Pool_Balls/mini_balls/black-Poolball_thumb.png', import.meta.url).href },
 ];
 
 export const CLOTH_COLORS = [
@@ -92,11 +101,27 @@ export const SPEED_CLOTH_COLORS = [
   { name: 'Camel', value: '#C19A6B' },
 ];
 
-export const DIAL_COLORS = [
-  { name: 'Carbon Black', value: '#1A1A1A' },
-  { name: 'Forged Grey', value: '#333333' },
-  { name: 'Silver Streak', value: '#C0C0C0' },
-  { name: 'Stealth Blue', value: '#1B263B' },
-  { name: 'Racing Red', value: '#A01A1A' },
-  { name: 'Neon Green', value: '#39FF14' },
+export const FULL_SCREEN_BACKDROPS = [
+  { name: 'Disabled', value: 'none', image: null, thumbnail: null },
+  { name: 'Black', value: 'black', image: new URL('./assets/tables/black_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/black_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Blue', value: 'blue', image: new URL('./assets/tables/blue_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/blue_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Blue Light', value: 'blue_light', image: new URL('./assets/tables/blue_light_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/blue_light_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Green', value: 'green', image: new URL('./assets/tables/green_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/green_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Grey Light', value: 'grey_light', image: new URL('./assets/tables/grey_light_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/grey_light_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Pink', value: 'pink', image: new URL('./assets/tables/pink_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/pink_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Purple', value: 'purple', image: new URL('./assets/tables/purple_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/purple_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Red', value: 'red', image: new URL('./assets/tables/red_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/red_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Chequer', value: 'chequer', image: new URL('./assets/tables/chequer_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/chequer_pool_table_thumb.png', import.meta.url).href },
+  { name: 'England', value: 'england', image: new URL('./assets/tables/england_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/england_pool_table_thumb.png', import.meta.url).href },
+  { name: 'France', value: 'france', image: new URL('./assets/tables/frnce_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/frnce_pool_table_thumb.png', import.meta.url).href },
+  { name: 'German', value: 'german', image: new URL('./assets/tables/german_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/german_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Ireland', value: 'ireland', image: new URL('./assets/tables/ireland_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/ireland_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Japan', value: 'japan', image: new URL('./assets/tables/japan_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/japan_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Kernow', value: 'kernow', image: new URL('./assets/tables/kernow_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/kernow_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Northern Ireland', value: 'northern_ireland', image: new URL('./assets/tables/northern_ireland_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/northern_ireland_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Scotland', value: 'scotland', image: new URL('./assets/tables/scot_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/scot_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Union', value: 'union', image: new URL('./assets/tables/union_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/union_pool_table_thumb.png', import.meta.url).href },
+  { name: 'USA', value: 'usa', image: new URL('./assets/tables/usa_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/usa_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Wales', value: 'wales', image: new URL('./assets/tables/wales_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/wales_pool_table_thumb.png', import.meta.url).href },
+  { name: 'Magma', value: 'magma', image: new URL('./assets/tables/magma_pool_table.png', import.meta.url).href, thumbnail: new URL('./assets/tables/mini_tables/magma_pool_table_thumb.png', import.meta.url).href },
 ];

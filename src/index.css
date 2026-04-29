@@ -66,12 +66,34 @@
     min-width: 5rem;
   }
 
-  .widget-text { font-size: 2.8vh !important; }
-  .widget-label { font-size: 1.1vh !important; }
+  .widget-text { font-size: 2.8vh !important; text-shadow: 0 0.2vh 0.4vh rgba(0,0,0,0.5); }
+  .widget-label { font-size: 1.1vh !important; text-shadow: 0 0.1vh 0.2vh rgba(0,0,0,0.5); }
   .widget-icon { width: 3.8vh !important; height: 3.8vh !important; }
 
   .widget-finish-match {
     min-width: 0 !important;
     min-height: 0 !important;
   }
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-25deg); }
+  100% { transform: translateX(150%) skewX(-25deg); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
 

@@ -6,21 +6,31 @@ interface ColorPickerProps {
   label: string;
   value: string;
   onChange: (color: string) => void;
-  colors: { name: string; value: string; number?: number; isStripe?: boolean }[];
+  colors: { name: string; value: string; number?: number; isStripe?: boolean; image?: string; thumbnail?: string }[];
   icon: React.ReactNode;
   isOpen: boolean;
   onToggle: (isOpen: boolean) => void;
   themeColor?: string;
-  pickerStyle?: 'default' | 'balls' | 'cloth' | 'speed' | 'dial';
-  onStyleChange?: (style: 'default' | 'balls' | 'cloth' | 'speed' | 'dial') => void;
-  allowedStyles?: ('default' | 'balls' | 'cloth' | 'speed' | 'dial')[];
+  pickerStyle?: 'default' | 'balls' | 'cloth' | 'speed' | 'dial' | 'backdrop';
+  onStyleChange?: (style: 'default' | 'balls' | 'cloth' | 'speed' | 'dial' | 'backdrop') => void;
+  allowedStyles?: ('default' | 'balls' | 'cloth' | 'speed' | 'dial' | 'backdrop')[];
+  disabled?: boolean;
 }
 
 export const ColorPicker: React.FC<ColorPickerProps> = ({ 
   label, value, onChange, colors, icon, isOpen, onToggle, themeColor, 
-  pickerStyle = 'default', onStyleChange, allowedStyles = ['default']
+  pickerStyle = 'default', onStyleChange, allowedStyles = ['default'],
+  disabled = false
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,7 +45,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   }, [isOpen, onToggle]);
 
   const radius = 7;
-  const hexSize = 1.25; // converted to vw-like scale in logic
+  const hexUnit = 4.2; // Base unit in percentage for the hex grid
 
   const hexGrid = React.useMemo(() => {
     const hslToHex = (h: number, s: number, l: number) => {
@@ -48,7 +58,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       };
       return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
     };
-
+ 
     const hexes = [];
     for (let q = -radius + 1; q < radius; q++) {
       const r1 = Math.max(-radius + 1, -q - radius + 1);
@@ -72,78 +82,106 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           color = hslToHex(hue, s, l);
         }
 
-        const posX = hexSize * (1.5 * q);
-        const posY = hexSize * (Math.sqrt(3) / 2 * q + Math.sqrt(3) * r);
+        const posX = hexUnit * (1.5 * q);
+        const posY = hexUnit * (Math.sqrt(3) / 2 * q + Math.sqrt(3) * r);
 
         hexes.push({ color, posX, posY });
       }
     }
     return hexes;
-  }, [hexSize]);
+  }, [hexUnit]);
 
   return (
-    <div className="relative" ref={containerRef}>
-      <div className="flex items-center justify-between p-[min(2vh,1.5rem)] bg-slate-950/30 rounded-xl border transition-colors cursor-pointer group"
+    <div className={`relative w-full ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}`} ref={containerRef}>
+      <div className="flex items-center justify-between p-[2vh] bg-slate-950/30 rounded-xl border transition-all cursor-pointer group active:scale-[0.98] w-full"
            style={{ 
              borderColor: isOpen ? (themeColor || '#10b981') : 'rgba(255,255,255,0.05)',
            }}
-           onClick={() => onToggle(!isOpen)}>
+           onClick={() => !disabled && onToggle(!isOpen)}>
         <div className="flex items-center gap-[1vw]">
           <div className="p-[1.5vh] bg-slate-800 rounded-lg text-slate-400 transition-colors"
                style={{ color: isOpen ? (themeColor || '#10b981') : undefined }}>
             {icon}
           </div>
           <div>
-            <p className="text-[min(2.2vh,1.125rem)] font-bold uppercase tracking-wider text-slate-500">{label}</p>
-            <div className="flex items-center gap-[0.5vw]">
-              <div className="w-[2.4vw] h-[2.4vw] min-w-[1.5rem] min-h-[1.5rem] rounded-full border border-white/20" style={{ backgroundColor: value }} />
-              <span className="text-[min(3.2vh,1.5rem)] font-black text-slate-200 uppercase">{value}</span>
+            {pickerStyle !== 'backdrop' && (
+              <p className="font-bold uppercase tracking-wider text-slate-500 text-[10px] sm:text-[1.5vh]">{label}</p>
+            )}
+            <div className="flex items-center gap-[0.5vw] h-[8vh] sm:h-[10vh]">
+              {(pickerStyle === 'balls' || pickerStyle === 'backdrop') && colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.thumbnail ? (
+                <div className={`${pickerStyle === 'backdrop' ? 'w-[18vw] sm:w-[14vw]' : 'w-16 sm:w-20'} h-[6vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/10 shadow-lg`}>
+                  <img 
+                    src={colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.thumbnail} 
+                    alt="Selected"
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              ) : pickerStyle === 'balls' && colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.image ? (
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg">
+                  <img 
+                    src={colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.image} 
+                    alt="Selected Ball"
+                    className="w-full h-full object-contain"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              ) : (
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/20" style={{ backgroundColor: value }} />
+              )}
+              <span className="text-[2.2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
+                {colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value}
+              </span>
             </div>
           </div>
         </div>
-        <ChevronDown className={`w-[2.5vh] h-[2.5vh] text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-[2vh] h-[2vh] sm:w-5 sm:h-5 text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute left-1/2 -translate-x-1/2 top-full mt-[1vh] z-[100] p-[3vh] bg-slate-900 border rounded-3xl shadow-2xl backdrop-blur-xl min-w-[80vw] sm:min-w-[21.25rem] flex flex-col items-center gap-[3vh]"
-            style={{ borderColor: (themeColor || '#10b981') + '33' }}
+            initial={{ opacity: 0, y: 10, scale: isMobile && pickerStyle === 'default' ? 1.2 : 0.95 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0, 
+              scale: isMobile && pickerStyle === 'default' ? 1.25 : 1 
+            }}
+            exit={{ opacity: 0, y: 10, scale: isMobile && pickerStyle === 'default' ? 1.2 : 0.95 }}
+            className={`absolute top-full mt-[1vh] z-[110] bg-slate-900 border rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col items-center origin-top inset-x-0
+              ${pickerStyle === 'default' 
+                ? 'py-[2.5vh] gap-[1vh] px-[6%]' 
+                : pickerStyle === 'backdrop' ? 'pt-[1vh] pb-[2.5vh] gap-[1vh] px-[2%]' : 'pt-[1.5vh] pb-[4.5vh] gap-[1.5vh] sm:pt-[2.5vh] sm:pb-[5.5vh] px-[6%]' 
+              }`}
+            style={{ 
+              borderColor: (themeColor || '#10b981') + '33'
+            }}
           >
             {allowedStyles.length > 1 && (
-              <div className="w-full flex p-[0.5vh] bg-black/40 rounded-2xl border border-white/5 overflow-x-auto no-scrollbar">
+              <div className="w-full flex p-1 bg-black/40 rounded-2xl border border-white/5 overflow-x-auto no-scrollbar">
                 {allowedStyles.map((style) => {
                   const labelMap = { 
                     default: 'Grid', 
                     balls: 'Balls', 
                     cloth: 'Standard', 
-                    speed: 'Speed', 
-                    dial: 'Dial' 
+                    speed: 'Speed',
+                    dial: 'Dial'
                   };
                   return (
                     <button
                       key={style}
                       onClick={() => onStyleChange?.(style)}
-                      className={`flex-1 min-w-[15vw] sm:min-w-[3.75rem] flex items-center justify-center gap-[1vw] py-[1.5vh] rounded-xl transition-all ${pickerStyle === style ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                      className={`flex-1 min-w-[14vmin] sm:min-w-[3.75rem] flex items-center justify-center gap-[1vmin] py-[0.1vh] sm:py-[0.15vh] rounded-xl transition-all active:scale-90 ${pickerStyle === style ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
                     >
-                      <span className="text-[1.2vh] font-black uppercase tracking-widest">{labelMap[style]}</span>
+                      <span className="text-[2.8vh] sm:text-[3.2vh] font-black uppercase tracking-widest">{labelMap[style as keyof typeof labelMap]}</span>
                     </button>
                   );
                 })}
               </div>
             )}
 
-            <div className="text-center">
-              <h4 className="text-[1.8vh] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                {pickerStyle === 'balls' ? 'Ball Rack' : pickerStyle === 'cloth' ? 'Standard Cloth' : pickerStyle === 'speed' ? 'Speed Cloth' : pickerStyle === 'dial' ? 'Precision Dial' : 'Pick a Color'}
-              </h4>
-            </div>
-
             {pickerStyle === 'default' ? (
-              <div className="relative w-[70vw] h-[70vw] sm:w-[25vh] sm:h-[25vh] lg:w-[40vh] lg:h-[40vh] flex items-center justify-center bg-white/5 rounded-full p-[2vh]">
+              <div className="relative w-[92%] aspect-square flex items-center justify-center bg-white/5 rounded-full p-[1%] mt-[0.5vh]">
                 {hexGrid.map((hex, idx) => {
                   const isActive = value.toUpperCase() === hex.color.toUpperCase();
                   return (
@@ -153,12 +191,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                         onChange(hex.color);
                         onToggle(false);
                       }}
-                      className="absolute group"
+                      className="absolute group active:scale-90 transition-transform"
                       style={{
-                        left: `calc(50% + ${hex.posX}vw)`,
-                        top: `calc(50% + ${hex.posY}vw)`,
-                        width: `${hexSize * 2.2}vw`,
-                        height: `${hexSize * 2.2}vw`,
+                        left: `calc(50% + ${hex.posX}%)`,
+                        top: `calc(50% + ${hex.posY}%)`,
+                        width: `${hexUnit * 2.1}%`,
+                        height: `${hexUnit * 2.1}%`,
                         transform: 'translate(-50%, -50%)',
                       }}
                       title={hex.color}
@@ -175,7 +213,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 })}
               </div>
             ) : pickerStyle === 'balls' ? (
-              <div className="grid grid-cols-5 gap-[2vw]">
+              <div className="grid grid-cols-3 gap-[3vh] w-full max-h-[60vh] overflow-y-auto no-scrollbar p-2">
                 {colors.map((ball) => {
                   const isActive = value.toUpperCase() === ball.value.toUpperCase();
                   return (
@@ -185,95 +223,71 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                         onChange(ball.value);
                         onToggle(false);
                       }}
-                      className={`relative w-[12vw] h-[12vw] sm:w-[3rem] sm:h-[3rem] rounded-full transition-all duration-300 group ${isActive ? 'scale-125 ring-2 ring-white ring-offset-4 ring-offset-slate-900 z-10' : 'hover:scale-110'}`}
+                      className={`relative w-full aspect-square rounded-full transition-all duration-300 group active:scale-90 ${isActive ? 'scale-110 ring-4 ring-white ring-offset-4 ring-offset-slate-900 z-10' : 'hover:scale-110'}`}
                       style={{ 
                         backgroundColor: ball.value,
-                        boxShadow: 'inset -0.25rem -0.25rem 0.625rem rgba(0,0,0,0.5), inset 0.25rem 0.25rem 0.625rem rgba(255,255,255,0.2), 0 0.25rem 0.5rem rgba(0,0,0,0.3)'
+                        boxShadow: '0 8px 16px rgba(0,0,0,0.5)'
                       }}
                       title={ball.name}
                     >
-                      {ball.isStripe && (
-                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5vh] bg-white pointer-events-none" />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-[40%] aspect-square bg-white rounded-full flex items-center justify-center shadow-sm">
-                          <span className="text-[1.2vh] font-bold text-black leading-none">{ball.number}</span>
+                      { (ball.thumbnail || ball.image) ? (
+                        <img 
+                          src={ball.thumbnail || ball.image} 
+                          alt={ball.name} 
+                          className="absolute inset-0 w-full h-full object-contain rounded-full p-0.5"
+                          referrerPolicy="no-referrer"
+                          fetchPriority="high"
+                          loading="eager"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center font-bold text-[3.5vh] text-white">
+                          {ball.number}
                         </div>
-                      </div>
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-transparent to-white/30 pointer-events-none" />
+                      )}
                     </button>
                   );
                 })}
               </div>
-            ) : pickerStyle === 'dial' ? (
-              <div className="relative w-[70vw] h-[70vw] sm:w-[35vh] sm:h-[35vh] flex items-center justify-center">
-                {/* Carbon Fiber Dial Background */}
-                <div 
-                  className="absolute inset-0 rounded-full border-[1vh] border-slate-800 shadow-2xl overflow-hidden"
-                  style={{ 
-                    backgroundImage: 'linear-gradient(45deg, #111 25%, transparent 25%), linear-gradient(-45deg, #111 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #111 75%), linear-gradient(-45deg, transparent 75%, #111 75%)',
-                    backgroundSize: '0.5vh 0.5vh',
-                    backgroundColor: '#1a1a1a'
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-black/40 pointer-events-none" />
-                </div>
-
-                {/* Dial Center */}
-                <div className="absolute inset-[20%] rounded-full bg-slate-900 border-[0.5vh] border-slate-800 shadow-inner flex flex-col items-center justify-center gap-[1vh]">
-                  <div className="w-[20%] aspect-square rounded-full shadow-lg border-2 border-white/20" style={{ backgroundColor: value }} />
-                  <span className="text-[1vh] font-black text-slate-500 uppercase tracking-widest">{colors.find(c => c.value === value)?.name || 'Selected'}</span>
-                </div>
-
-                {/* Option Nodes around the dial */}
-                {colors.map((color, idx) => {
-                  const angle = (idx / colors.length) * 2 * Math.PI - Math.PI / 2;
-                  const r = 11; // relative to vw in logic
-                  const x = Math.cos(angle) * r;
-                  const y = Math.sin(angle) * r;
-                  const isActive = value.toUpperCase() === color.value.toUpperCase();
-
+            ) : pickerStyle === 'backdrop' ? (
+              <div className="grid grid-cols-2 landscape:grid-cols-4 sm:grid-cols-4 gap-2 sm:gap-4 w-full max-h-[60vh] overflow-y-auto no-scrollbar p-3">
+                {colors.map((b) => {
+                  const isActive = value.toLowerCase() === b.value.toLowerCase();
                   return (
                     <button
-                      key={idx}
+                      key={b.value}
                       onClick={() => {
-                        onChange(color.value);
+                        onChange(b.value);
+                        onToggle(false);
                       }}
-                      className="absolute group z-20"
-                      style={{
-                        left: `calc(50% + ${x}vh)`,
-                        top: `calc(50% + ${y}vh)`,
-                        width: '4vh',
-                        height: '4vh',
-                        transform: 'translate(-50%, -50%)',
-                      }}
+                      className={`flex flex-col gap-1 p-1 rounded-xl border-2 transition-all active:scale-95 ${isActive ? 'bg-white/20 border-white ring-2 ring-white/30' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                     >
-                      <div 
-                        className={`w-full h-full rounded-full border-2 transition-all duration-300 ${isActive ? 'border-white scale-125 shadow-[0_0_1rem_rgba(255,255,255,0.5)]' : 'border-slate-700 group-hover:scale-110 group-hover:border-slate-500'}`}
-                        style={{ backgroundColor: color.value }}
-                      />
+                      <div className="w-full aspect-[16/10] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
+                         {b.thumbnail ? (
+                           <img 
+                             src={b.thumbnail} 
+                             alt={b.name} 
+                             className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                             referrerPolicy="no-referrer"
+                           />
+                         ) : (
+                           <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-500 font-bold uppercase">
+                             {b.name}
+                           </div>
+                         )}
+                         <div className="absolute inset-0 shadow-[inset_0_0_1rem_rgba(0,0,0,0.4)]" />
+                         {isActive && (
+                           <div className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow-lg">
+                             <Check className="w-2 h-2 text-slate-900" strokeWidth={5} />
+                           </div>
+                         )}
+                      </div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-tight text-center truncate w-full mt-1">{b.name}</span>
                     </button>
                   );
                 })}
-
-                {/* Rotating Needle */}
-                {(() => {
-                   const activeIdx = colors.findIndex(c => c.value.toUpperCase() === value.toUpperCase());
-                   if (activeIdx === -1) return null;
-                   const angle = (activeIdx / colors.length) * 360 - 90;
-                   return (
-                     <motion.div 
-                       className="absolute inset-0 pointer-events-none"
-                       animate={{ rotate: angle }}
-                       transition={{ type: "spring", stiffness: 100, damping: 15 }}
-                     >
-                        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[0.5vh] h-[35%] bg-gradient-to-b from-white to-transparent opacity-40 rounded-full" />
-                     </motion.div>
-                   );
-                })()}
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-[2vh] w-full">
+              <div className="grid grid-cols-2 gap-[0.8vmin] w-full">
                 {colors.map((cloth) => {
                   const isActive = value.toUpperCase() === cloth.value.toUpperCase();
                   return (
@@ -283,21 +297,21 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                         onChange(cloth.value);
                         onToggle(false);
                       }}
-                      className={`flex flex-col gap-[1vh] p-[1vh] rounded-xl border transition-all ${isActive ? 'bg-white/10 border-white' : 'bg-white/5 border-transparent hover:bg-white/10 shrink-0'}`}
+                      className={`flex flex-col gap-[0.4vmin] p-[0.6vmin] rounded-xl border transition-all active:scale-95 ${isActive ? 'bg-white/10 border-white' : 'bg-white/5 border-transparent hover:bg-white/10 shrink-0'}`}
                     >
                       <div 
-                        className="w-full h-[8vh] rounded-lg shadow-inner flex items-center justify-center overflow-hidden relative"
+                        className="w-full h-[3.5vh] sm:h-[7vh] rounded-lg shadow-inner flex items-center justify-center overflow-hidden relative"
                         style={{ backgroundColor: cloth.value }}
                       >
-                         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#000 0.0625rem, transparent 0.0625rem)', backgroundSize: '0.5vh 0.5vh' }} />
+                         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#000 0.0625rem, transparent 0.0625rem)', backgroundSize: '0.4vh 0.4vh' }} />
                          <div className="absolute inset-0 shadow-[inset_0_0_1.25rem_rgba(0,0,0,0.3)]" />
                          {pickerStyle === 'speed' && (
-                           <div className="absolute top-[0.5vh] right-[0.5vh]">
-                             <Zap className="w-[1.2vh] h-[1.2vh] text-white/40" />
+                           <div className="absolute top-[0.4vh] right-[0.4vh]">
+                             <Zap className="w-[1vh] h-[1vh] text-white/40" />
                            </div>
                          )}
                       </div>
-                      <span className="text-[1.2vh] font-bold text-slate-400 uppercase tracking-tighter text-center truncate w-full">{cloth.name}</span>
+                      <span className="text-[1vh] sm:text-[1.1vh] font-bold text-slate-400 uppercase tracking-tighter text-center truncate w-full">{cloth.name}</span>
                     </button>
                   );
                 })}
@@ -305,9 +319,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             )}
 
             {pickerStyle === 'default' && colors && colors.length > 0 && (
-              <div className="w-full space-y-[1vh]">
-                <p className="text-[1.2vh] font-bold text-slate-500 uppercase tracking-widest text-center">Presets</p>
-                <div className="flex flex-wrap justify-center gap-[0.5vh]">
+              <div className="w-full space-y-[2%]">
+                <p className="text-[3%] font-bold text-slate-500 uppercase tracking-widest text-center">Presets</p>
+                <div className="flex flex-wrap justify-center gap-[1%]">
                   {colors.slice(0, 12).map((c) => (
                     <button
                       key={c.value}
@@ -315,7 +329,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                         onChange(c.value);
                         onToggle(false);
                       }}
-                      className={`w-[2.5vh] h-[2.5vh] rounded-full border-2 transition-all ${value.toUpperCase() === c.value.toUpperCase() ? 'border-white scale-110' : 'border-transparent hover:scale-110'}`}
+                      className={`w-[8%] aspect-square rounded-full border-2 transition-all active:scale-90 ${value.toUpperCase() === c.value.toUpperCase() ? 'border-white scale-110' : 'border-transparent hover:scale-110'}`}
                       style={{ backgroundColor: c.value }}
                       title={c.name}
                     />
