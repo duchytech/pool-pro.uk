@@ -4,9 +4,10 @@ Pool-Pro.uk is a feature rich web application for pool scoring for teams and sin
 
 
 ## Features
-- player names
-- team names
-- data export
+- Add player names
+- Add team names
+- Add referee to match
+- data export - JSON or CSV via DL or Device Share
 - data import
 - custom colours per player 
 - persistent data storage
@@ -22,6 +23,8 @@ Pool-Pro.uk is a feature rich web application for pool scoring for teams and sin
 - API - send data to server
 - epic auto sizing of long names to fit space
 - Retracting top bar when keyboard is active
+- 3 Game Modes: Singles / Group / Match
+- Stunning visuals
 
 ## Screenshot of Gameplay Page
 

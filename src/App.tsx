@@ -1569,7 +1569,8 @@ export default function App() {
           score1: nextScore1,
           score2: nextScore2,
           player1: playerId === '1' ? { ...player1, score: nextScore1 } : player1,
-          player2: playerId === '2' ? { ...player2, score: nextScore2 } : player2
+          player2: playerId === '2' ? { ...player2, score: nextScore2 } : player2,
+          frameDetails: [...currentMatchFrameDetails, frameDetail]
         }
       }));
     }
@@ -1635,11 +1636,13 @@ export default function App() {
 
   const decrementScore = (playerId: string) => {
     // Undo the last frame detail if it matches the player
+    let nextDetails = currentMatchFrameDetails;
     setCurrentMatchFrameDetails(prev => {
       if (prev.length === 0) return prev;
       const lastFrame = prev[prev.length - 1];
       if (lastFrame.winnerId === playerId) {
-        return prev.slice(0, -1);
+        nextDetails = prev.slice(0, -1);
+        return nextDetails;
       }
       return prev;
     });
@@ -1662,6 +1665,7 @@ export default function App() {
             ...prev[selectedMatchIndex],
             score1: nextScore,
             player1: { ...player1, score: nextScore },
+            frameDetails: nextDetails,
             currentBreakPlayerId: (nextScore === 0 && player2.score === 0) ? 'none' : (prev[selectedMatchIndex].currentBreakPlayerId || 'none')
           }
         }));
@@ -1684,6 +1688,7 @@ export default function App() {
             ...prev[selectedMatchIndex],
             score2: nextScore,
             player2: { ...player2, score: nextScore },
+            frameDetails: nextDetails,
             currentBreakPlayerId: (nextScore === 0 && player1.score === 0) ? 'none' : (prev[selectedMatchIndex].currentBreakPlayerId || 'none')
           }
         }));
@@ -2514,18 +2519,24 @@ export default function App() {
 
   // --- Rendering Helpers ---
   const renderSetupTabs = () => (
-    <div className="flex items-center justify-center w-[95vw] mx-auto bg-white/5 rounded-2xl p-1 mb-8 overflow-hidden">
+    <div className="flex items-center justify-center w-[95vw] mx-auto gap-3 mb-10">
       {(['singles', 'group', 'match'] as SetupTab[]).map(tab => (
         <button
           key={tab}
           onClick={() => handleTabSwitch(tab)}
-          className={`flex-1 py-1 sm:py-2 rounded-xl font-black uppercase tracking-widest transition-all text-[1.4rem] sm:text-2xl ${
+          className={`flex-1 py-3 sm:py-4 rounded-xl font-black uppercase tracking-[0.2em] transition-all text-[0.75rem] sm:text-sm border-2 relative overflow-hidden group shadow-lg ${
             activeSetupTab === tab 
-              ? 'text-slate-950 shadow-lg scale-105 z-10' 
-              : 'text-slate-100 bg-white/5 border border-white/5 hover:bg-white/15'
+              ? 'text-slate-950 scale-105 z-10 border-transparent shadow-[0_0_20px_rgba(255,255,255,0.1)]' 
+              : 'border-dashed bg-black/20 hover:bg-white/5 active:scale-[0.98]'
           }`}
-          style={activeSetupTab === tab ? { backgroundColor: player1.color } : {}}
+          style={activeSetupTab === tab 
+            ? { backgroundColor: player1.color } 
+            : { borderColor: player1.color + '44', color: player1.color }
+          }
         >
+          <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none ${
+            activeSetupTab === tab ? 'animate-shimmer' : 'group-hover:animate-shimmer'
+          }`} />
           {tab}
         </button>
       ))}
@@ -2545,60 +2556,94 @@ export default function App() {
       .filter(Boolean)
       .flatMap(p => p.includes(' / ') ? p.split(' / ') : [p]);
 
-    // Only allow individuals from the roster who are NOT playing in this match
-    const pool = side === '1' ? team1Roster : team2Roster;
-    const players = pool
-      .filter(p => p && !p.includes('/'))
+    // Combine roster and current players for each side to ensure we have a full pool
+    // Side 1 Pool
+    const side1Pool = [...team1Roster, ...team1Players]
+      .filter(p => p && p.trim() !== "")
+      .filter((v, i, a) => a.indexOf(v) === i);
+    
+    // Side 2 Pool
+    const side2Pool = [...team2Roster, ...team2Players]
+      .filter(p => p && p.trim() !== "")
+      .filter((v, i, a) => a.indexOf(v) === i);
+
+    // Determine which pool to show based on the side button clicked
+    const primaryPool = side === '1' ? side1Pool : side2Pool;
+    
+    const players = primaryPool
+      .flatMap(p => p.includes(' / ') ? p.split(' / ') : [p])
       .filter((v, i, a) => a.indexOf(v) === i)
+      .filter(Boolean)
       .filter(p => !participantNames.includes(p));
+
     const teamColor = side === '1' ? player1.color : player2.color;
     
     return (
-      <div key="referee-picker-overlay" className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/95 backdrop-blur-xl">
+      <div key="referee-picker-overlay" className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 backdrop-blur-xl">
         <motion.div
-          initial={deviceInfo.isPhone ? { y: '100%' } : { scale: 0.9, opacity: 0 }}
-          animate={deviceInfo.isPhone ? { y: 0 } : { scale: 1, opacity: 1 }}
-          exit={deviceInfo.isPhone ? { y: '100%' } : { scale: 0.9, opacity: 0 }}
-          className="w-full max-w-md bg-slate-900 border-t-2 sm:border-2 rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 space-y-6 shadow-2xl relative h-[100dvh] sm:h-auto flex flex-col pt-12 sm:pt-8"
-          style={{ borderColor: `${teamColor}44` }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="w-full h-[100dvh] sm:max-w-md sm:h-[100dvh] bg-slate-900 border-x-0 sm:border-x-2 border-white/10 shadow-2xl relative flex flex-col pt-12 sm:pt-8"
+          style={{ borderTop: `4px solid ${teamColor}` }}
         >
-          <div className="flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-3">
-              <Glasses className="w-8 h-8" style={{ color: teamColor }} />
-              <h3 className="text-2xl font-black uppercase tracking-widest text-white">Select Referee</h3>
+          <div className="px-6 sm:px-8 flex items-center justify-between shrink-0 mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10">
+                <Glasses className="w-6 h-6" style={{ color: teamColor }} />
+              </div>
+              <div className="flex flex-col">
+                <h3 className="text-2xl font-black uppercase tracking-tight text-white leading-none">Select Referee</h3>
+                <span className="text-xs font-bold uppercase tracking-[0.2em] opacity-40 mt-1" style={{ color: teamColor }}>
+                  {side === '1' ? (team1Name || 'HOME TEAM') : (team2Name || 'AWAY TEAM')}
+                </span>
+              </div>
             </div>
             <button 
               onClick={() => setShowRefereePicker({ ...showRefereePicker, isOpen: false })} 
-              className="p-2 text-slate-400 hover:text-white transition-colors"
+              className="p-3 hover:bg-white/10 rounded-2xl transition-colors text-white/40 hover:text-white"
             >
-              <X className="w-8 h-8" />
+              <X className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 space-y-3">
-            {players.length === 0 && <p className="text-center text-slate-600 italic py-10 font-bold uppercase tracking-widest">No players available on this roster</p>}
-            {players.map((name) => {
-              const isSelected = matchupSettings[matchIndex!]?.referee?.name === name && 
-                               matchupSettings[matchIndex!]?.referee?.team === side;
-              
-              return (
-                <button
-                  key={`ref-${name}`}
-                  onClick={() => updateReferee(matchIndex!, name, side)}
-                  className={`w-full p-4 rounded-xl font-black uppercase tracking-widest transition-all flex items-center justify-between gap-4 border-2 ${
-                    isSelected 
-                      ? 'bg-amber-500/10 border-amber-500 text-amber-500' 
-                      : 'bg-white/5 border-transparent text-slate-400 hover:border-white/10 hover:text-white'
-                  }`}
-                >
-                  <span className="truncate">{name}</span>
-                  {isSelected && <Check className="w-5 h-5" />}
-                </button>
-              );
-            })}
+          <div className="flex-1 overflow-y-auto custom-scrollbar px-6 sm:px-8 space-y-3 min-h-0">
+            {players.length === 0 ? (
+              <div className="py-20 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto opacity-20">
+                  <Glasses className="w-8 h-8 text-white" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-slate-500 italic font-bold uppercase tracking-widest text-xs">No available players found</p>
+                  <p className="text-slate-700 text-[10px] font-bold uppercase tracking-tighter max-w-[200px] mx-auto">Add names to the {side === '1' ? 'Home' : 'Away'} roster first</p>
+                </div>
+              </div>
+            ) : (
+              players.map((name) => {
+                const isSelected = matchupSettings[matchIndex!]?.referee?.name === name && 
+                                  matchupSettings[matchIndex!]?.referee?.team === side;
+                
+                return (
+                  <button
+                    key={`ref-${name}`}
+                    onClick={() => updateReferee(matchIndex!, name, side)}
+                    className={`w-full p-5 rounded-2xl flex items-center justify-between text-left transition-all border-2 group ${
+                      isSelected 
+                        ? 'bg-emerald-500/10 border-emerald-500 text-white shadow-[0_0_30px_rgba(16,185,129,0.15)]' 
+                        : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    <span className="truncate font-black uppercase tracking-[0.1em] text-sm">{name}</span>
+                    <div className={`p-2 rounded-lg transition-colors ${isSelected ? 'bg-emerald-500 text-slate-900' : 'bg-white/5 group-hover:bg-white/10 text-transparent group-hover:text-white/20'}`}>
+                      <Check className="w-4 h-4 shrink-0" strokeWidth={3} />
+                    </div>
+                  </button>
+                );
+              })
+            )}
           </div>
 
-          <div className="pt-4 border-t border-white/5 pb-8 sm:pb-0 shrink-0">
+          <div className="px-6 sm:px-8 py-8 border-t border-white/5 shrink-0 bg-slate-900 shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
              <button
                onClick={() => {
                  setMatchupSettings(prev => {
@@ -2611,9 +2656,9 @@ export default function App() {
                  });
                  setShowRefereePicker({ ...showRefereePicker, isOpen: false });
                }}
-               className="w-full py-4 text-xs font-black uppercase tracking-widest text-slate-500 hover:text-red-400 transition-colors"
+               className="w-full py-4 text-xs font-black uppercase tracking-[0.4em] text-slate-600 hover:text-red-500 transition-colors"
              >
-               Remove Referee
+               Clear Selection
              </button>
           </div>
         </motion.div>
@@ -4454,28 +4499,30 @@ export default function App() {
                 <div className="absolute right-[2.5vw] bottom-[1vh] flex items-center gap-3">
                   <button 
                     onClick={() => setShowExportMenu(true)}
-                    className="flex items-center justify-between gap-5 px-4 sm:px-5 py-1.5 sm:py-2 bg-slate-800 hover:bg-slate-700 rounded-lg sm:rounded-xl transition-all border-2"
+                    className="flex items-center justify-between gap-5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all border-2 border-dashed relative overflow-hidden group shadow-lg active:scale-[0.98]"
                     style={{ 
-                      borderColor: player1.color + '66',
+                      borderColor: player1.color + '44',
                       color: '#fff',
-                      backgroundColor: 'transparent',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
                       minWidth: 'fit-content'
                     }}
                   >
-                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-                    <Download className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 relative z-10" />
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 relative z-10" />
                   </button>
                   <button 
                     onClick={uploadData}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-800 hover:bg-slate-700 rounded-lg sm:rounded-xl transition-all font-bold text-[0.625rem] sm:text-sm border-2"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all font-bold text-[0.625rem] sm:text-sm border-2 border-dashed relative overflow-hidden group shadow-lg active:scale-[0.98]"
                     style={{ 
-                      borderColor: player1.color + '66',
+                      borderColor: player1.color + '44',
                       color: '#fff',
-                      backgroundColor: 'transparent'
+                      backgroundColor: 'rgba(0,0,0,0.2)'
                     }}
                   >
-                    <Upload className="w-[0.75rem] h-[0.75rem] sm:w-[1rem] sm:h-[1rem]" />
-                    Import
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                    <Upload className="w-[0.75rem] h-[0.75rem] sm:w-[1rem] sm:h-[1rem] relative z-10" />
+                    <span className="relative z-10">Import</span>
                   </button>
                 </div>
               </div>
@@ -4716,7 +4763,7 @@ export default function App() {
                                 backgroundColor: 'rgba(0,0,0,0.2)'
                               }}
                             >
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
                               <Plus className="w-5 h-5 transition-transform group-hover:rotate-90" />
                               Add Player
                             </button>
@@ -4730,7 +4777,7 @@ export default function App() {
                                   backgroundColor: 'rgba(0,0,0,0.2)'
                                 }}
                               >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
                                 Create Singles
                               </button>
                               <button 
@@ -4742,7 +4789,7 @@ export default function App() {
                                   backgroundColor: 'rgba(0,0,0,0.2)'
                                 }}
                               >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
                                 Create Doubles
                               </button>
                             </div>
@@ -4757,7 +4804,7 @@ export default function App() {
                                 backgroundColor: 'rgba(0,0,0,0.2)'
                               }}
                             >
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
                               <Plus className="w-6 h-6 transition-transform group-hover:rotate-90" />
                               Add
                             </button>
@@ -4893,7 +4940,7 @@ export default function App() {
                               backgroundColor: 'rgba(0,0,0,0.2)'
                             }}
                           >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
                             <Plus className="w-6 h-6 transition-transform group-hover:rotate-90" />
                             Add
                           </button>
@@ -4926,14 +4973,18 @@ export default function App() {
                           <GripVertical className="w-3 h-3 opacity-20" />
                         </div>
                         <div className="hidden sm:flex px-[1vw] py-[2vh] text-[2vw] sm:text-xs lg:text-[0.85rem] uppercase tracking-[0.2em] text-slate-400 w-[6%] shrink-0 items-center">No.</div>
-                        <div className="flex px-[0.5vw] py-[2vh] text-[2vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-400 justify-center w-[12%] sm:w-[10%] shrink-0 items-center" title="Referee">Ref</div>
+                        {activeSetupTab !== 'singles' && (
+                          <div className="flex px-[0.5vw] py-[2vh] text-[2vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-400 justify-center w-[12%] sm:w-[10%] shrink-0 items-center" title="Referee">Ref</div>
+                        )}
                         <div 
                           className="flex px-[1.5vw] py-[2vh] text-[3vw] sm:text-[0.85rem] uppercase tracking-widest flex-1 min-w-0 items-center truncate text-white"
                         >
                           <span>{activeSetupTab === 'group' ? 'SIDE A' : (team1Name || 'TEAM A')}</span>
                         </div>
                         <div className="flex px-[0.5vw] py-[2vh] text-[2.5vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-600 justify-center w-[8%] sm:w-[6%] shrink-0 items-center">VS</div>
-                        <div className="flex px-[0.5vw] py-[2vh] text-[2vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-400 justify-center w-[12%] sm:w-[10%] shrink-0 items-center" title="Referee">Ref</div>
+                        {activeSetupTab !== 'singles' && (
+                          <div className="flex px-[0.5vw] py-[2vh] text-[2vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-400 justify-center w-[12%] sm:w-[10%] shrink-0 items-center" title="Referee">Ref</div>
+                        )}
                         <div 
                           className="flex px-[1.5vw] py-[2vh] text-[3vw] sm:text-[0.85rem] uppercase tracking-widest flex-1 min-w-0 items-center truncate text-white"
                         >
@@ -5026,23 +5077,25 @@ export default function App() {
                                     className={`group flex items-center cursor-pointer transition-all border-b border-slate-800/30 last:border-0 hover:bg-emerald-500/5 ${selectedMatchIndex === idx ? 'bg-emerald-500/10' : ''}`}
                                   >
                                     <div className="hidden sm:flex px-[1vw] py-[2vh] text-[2vw] sm:text-xs font-black text-slate-600 w-[6%] shrink-0 items-center whitespace-nowrap">#{idx + 1}</div>
-                                    <div 
-                                      className="flex px-[0.5vw] py-[2vh] justify-center w-[12%] sm:w-[10%] shrink-0 items-center"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setShowRefereePicker({ isOpen: true, matchIndex: idx, side: '1' });
-                                      }}
-                                    >
-                                      {matchup?.referee?.team === '1' ? (
-                                        <span className="text-[3vw] sm:text-sm font-black text-amber-500 uppercase truncate text-center leading-tight">
-                                          {matchup.referee.name}
-                                        </span>
-                                      ) : (
-                                        <div className={`p-1 sm:p-1.5 rounded-lg transition-all flex items-center justify-center cursor-pointer ${!matchup?.referee ? 'text-amber-500/30' : 'text-slate-800 hover:text-slate-500'}`}>
-                                          <Glasses className={`w-[2.5vw] sm:w-4 h-[2.5vw] sm:h-4 ${!matchup?.referee ? 'animate-pulse' : ''}`} />
-                                        </div>
-                                      )}
-                                    </div>
+                                    {activeSetupTab !== 'singles' && (
+                                      <div 
+                                        className="flex px-[0.5vw] py-[2vh] justify-center w-[12%] sm:w-[10%] shrink-0 items-center"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setShowRefereePicker({ isOpen: true, matchIndex: idx, side: '1' });
+                                        }}
+                                      >
+                                        {matchup?.referee?.team === '1' ? (
+                                          <span className="text-[3vw] sm:text-sm font-black text-amber-500 uppercase truncate text-center leading-tight">
+                                            {matchup.referee.name}
+                                          </span>
+                                        ) : (
+                                          <div className={`p-1 sm:p-1.5 rounded-lg transition-all flex items-center justify-center cursor-pointer ${!matchup?.referee ? 'text-amber-500/30' : 'text-slate-800 hover:text-slate-500'}`}>
+                                            <Glasses className={`w-[2.5vw] sm:w-4 h-[2.5vw] sm:h-4 ${!matchup?.referee ? 'animate-pulse' : ''}`} />
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
                                     <div className="flex px-[1.5vw] py-[2vh] text-[3vw] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors flex-1 min-w-0 items-center overflow-hidden">
                                       {activeSetupTab === 'match' && matchModeBreakSide !== 'none' && rowBreaker === '1' && (
                                         <div className="mr-2 shrink-0">
@@ -5061,23 +5114,25 @@ export default function App() {
                                       </div>
                                     </div>
                                     <div className="flex px-[0.5vw] py-[2vh] text-center text-slate-700 font-black text-[2vw] sm:text-[0.625rem] justify-center w-[8%] sm:w-[6%] shrink-0 items-center">VS</div>
-                                    <div 
-                                      className="flex px-[0.5vw] py-[2vh] justify-center w-[12%] sm:w-[10%] shrink-0 items-center"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setShowRefereePicker({ isOpen: true, matchIndex: idx, side: '2' });
-                                      }}
-                                    >
-                                      {matchup?.referee?.team === '2' ? (
-                                        <span className="text-[3vw] sm:text-sm font-black text-amber-500 uppercase truncate text-center leading-tight">
-                                          {matchup.referee.name}
-                                        </span>
-                                      ) : (
-                                        <div className={`p-1 sm:p-1.5 rounded-lg transition-all flex items-center justify-center cursor-pointer ${!matchup?.referee ? 'text-amber-500/30' : 'text-slate-800 hover:text-slate-500'}`}>
-                                          <Glasses className={`w-[2.5vw] sm:w-4 h-[2.5vw] sm:h-4 ${!matchup?.referee ? 'animate-pulse' : ''}`} />
-                                        </div>
-                                      )}
-                                    </div>
+                                    {activeSetupTab !== 'singles' && (
+                                      <div 
+                                        className="flex px-[0.5vw] py-[2vh] justify-center w-[12%] sm:w-[10%] shrink-0 items-center"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setShowRefereePicker({ isOpen: true, matchIndex: idx, side: '2' });
+                                        }}
+                                      >
+                                        {matchup?.referee?.team === '2' ? (
+                                          <span className="text-[3vw] sm:text-sm font-black text-amber-500 uppercase truncate text-center leading-tight">
+                                            {matchup.referee.name}
+                                          </span>
+                                        ) : (
+                                          <div className={`p-1 sm:p-1.5 rounded-lg transition-all flex items-center justify-center cursor-pointer ${!matchup?.referee ? 'text-amber-500/30' : 'text-slate-800 hover:text-slate-500'}`}>
+                                            <Glasses className={`w-[2.5vw] sm:w-4 h-[2.5vw] sm:h-4 ${!matchup?.referee ? 'animate-pulse' : ''}`} />
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
                                     <div className="flex px-[1.5vw] py-[2vh] text-[3vw] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors flex-1 min-w-0 items-center overflow-hidden">
                                       <div className="flex flex-col">
                                         {p2 && p2.includes('/') ? (
@@ -6196,6 +6251,11 @@ export default function App() {
                       })
                       .reverse()
                       .flatMap(m => m.frameDetails || []),
+                    // Include any frames stored in non-active matchups (Match/Group Mode)
+                    ...(Object.entries(matchupSettings)
+                      .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                      .flatMap(([_, settings]) => (settings as MatchupSettings).frameDetails || [])
+                      .filter(f => !currentMatchFrameDetails.some(cf => cf.timestamp === f.timestamp))), // Prevent duplicates if already in current
                     ...currentMatchFrameDetails
                   ].map((f, idx) => ({ ...f, frameNumber: idx + 1 })),
                   isLive: true,
