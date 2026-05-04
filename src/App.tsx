@@ -3889,6 +3889,7 @@ export default function App() {
         currentTime={currentTime}
         isShotClockEnabled={isShotClockEnabled}
         isMatchClockEnabled={isMatchClockEnabled}
+        isLoaded={isLoaded}
       />
 
 

@@ -135,7 +135,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   );
                 } else if (pickerStyle === 'balls' && selectedItem && (selectedItem.thumbnail || selectedItem.image)) {
                   return (
-                    <div className="w-5 h-5 sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-slate-800">
+                    <div className="w-[10vw] h-[10vw] sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-slate-800">
                       <img 
                         src={selectedItem.thumbnail || selectedItem.image} 
                         alt="Selected Ball"
@@ -251,7 +251,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                             src={ball.thumbnail || ball.image} 
                             alt={ball.name} 
                             className="absolute inset-0 w-full h-full object-contain rounded-full p-0.5"
-                            loading="lazy"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
@@ -283,13 +282,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       }}
                       className={`flex flex-col gap-1 p-1 rounded-xl border-2 transition-all active:scale-95 ${isActive ? 'bg-white/20 border-white ring-2 ring-white/30' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                     >
-                      <div className="w-full aspect-[16/10] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
+                      <div className="w-full aspect-[16/20] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
                          { (b.thumbnail || b.image) ? (
                            <img 
                              src={b.thumbnail || b.image} 
                              alt={b.name} 
                              className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                             loading="lazy"
                              onError={(e) => {
                                (e.target as HTMLImageElement).style.display = 'none';
                                (e.target as HTMLImageElement).parentElement!.classList.add('flex', 'items-center', 'justify-center');
