@@ -107,58 +107,50 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             {pickerStyle !== 'backdrop' && (
               <p className="font-bold uppercase tracking-wider text-slate-500 text-[2vw] sm:text-[1.5vh]">{label}</p>
             )}
-            <div className={`flex items-center gap-[2.5vw] sm:gap-[1vw] transition-all`}>
+            <div className={`flex items-center gap-[3vw] sm:gap-[1vw] transition-all h-[7vh] sm:h-[10vh]`}>
               {(() => {
                 const selectedItem = colors.find(c => c.value.toLowerCase() === value.toLowerCase());
                 
-                // 1. BACKDROP (POOL TABLE) STYLE
+                // 1. BACKDROP (POOL TABLE) STYLE - Wider rect for table preview
                 if (pickerStyle === 'backdrop' && selectedItem) {
                   const imgSrc = selectedItem.thumbnail || selectedItem.image;
                   return (
-                    <div className="w-[22vw] sm:w-[14vw] h-[7vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/20 shadow-lg flex items-center justify-center bg-slate-800 shrink-0">
+                    <div className="w-[30vw] sm:w-[14vw] h-[6.5vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/20 shadow-lg flex items-center justify-center bg-slate-800 shrink-0">
                       {imgSrc ? (
                         <img 
                           src={imgSrc} 
-                          alt="Selected"
+                          alt="Selected Backdrop"
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = document.createElement('div');
-                            fallback.className = 'text-[2.2vw] sm:text-[1vh] text-slate-400 font-bold uppercase p-1 text-center';
-                            fallback.innerText = selectedItem.name;
-                            target.parentElement?.appendChild(fallback);
-                          }}
                         />
                       ) : (
-                        <div className="text-[2.2vw] sm:text-[1vh] text-slate-500 font-bold">{selectedItem.name}</div>
+                        <div className="w-full h-full" style={{ backgroundColor: value }} />
                       )}
                     </div>
                   );
                 } 
                 
-                // 2. BALLS STYLE
+                // 2. BALLS STYLE - Circular preview
                 else if (pickerStyle === 'balls' && selectedItem && (selectedItem.thumbnail || selectedItem.image)) {
                   return (
-                    <div className="w-[10vw] h-[10vw] min-w-[32px] min-h-[32px] sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg bg-slate-800 shrink-0">
+                    <div className="w-[9vw] h-[9vw] min-w-[32px] min-h-[32px] sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg bg-slate-800 shrink-0">
                       <img 
                         src={selectedItem.thumbnail || selectedItem.image} 
                         alt="Selected Ball"
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain p-0.5"
                       />
                     </div>
                   );
                 }
                 
-                // 3. DEFAULT (STANDARD COLOR) STYLE
+                // 3. DEFAULT (PLAYER COLORS) STYLE - Circular swatch
                 return (
                   <div 
-                    className="w-[10vw] h-[10vw] min-w-[32px] min-h-[32px] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20 shrink-0" 
+                    className="w-[8.5vw] h-[8.5vw] min-w-[32px] min-h-[32px] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20 shadow-inner shrink-0" 
                     style={{ backgroundColor: value }} 
                   />
                 );
               })()}
-              <span className="text-[2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
+              <span className="text-[2.2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[45vw]">
                 {colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value}
               </span>
             </div>
@@ -180,9 +172,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             className={`absolute top-full mt-[1.5vh] z-[200] bg-slate-900 border rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col items-center origin-top
               ${pickerStyle === 'default' 
                 ? 'py-4 sm:py-[2.5vh] gap-4 px-[6%]' 
-                : pickerStyle === 'backdrop' ? 'pt-2 pb-6 gap-2 px-[2.5%]' : 'pt-4 pb-8 gap-4 px-[6%]' 
+                : pickerStyle === 'backdrop' ? 'pt-3 pb-8 gap-3 px-[4%]' : 'pt-4 pb-8 gap-4 px-[6%]' 
               }
-              ${isMobile ? 'fixed left-1/2 -translate-x-1/2 w-[92vw]' : 'inset-x-0'}
+              ${isMobile ? 'fixed left-[4vw] right-[4vw] w-[92vw]' : 'inset-x-0'}
             `}
             style={{ 
               borderColor: (themeColor || '#10b981') + '33',
@@ -296,7 +288,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       }}
                       className={`flex flex-col gap-1 p-1 rounded-xl border-2 transition-all active:scale-95 ${isActive ? 'bg-white/20 border-white ring-2 ring-white/30' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                     >
-                      <div className="w-full aspect-[21/9] sm:aspect-[16/10] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
+                      <div className="w-full aspect-[16/7] sm:aspect-[16/10] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
                          { (b.thumbnail || b.image) ? (
                            <img 
                              src={b.thumbnail || b.image} 
