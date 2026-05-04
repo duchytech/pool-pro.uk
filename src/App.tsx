@@ -899,7 +899,7 @@ export default function App() {
     if (!value) return '';
     const list = type === 'bg' 
       ? (style === 'balls' ? POOL_BALLS : BACKGROUND_COLORS)
-      : (style === 'cloth' ? CLOTH_COLORS : (style === 'speed' ? SPEED_CLOTH_COLORS : BACKGROUND_COLORS));
+      : BACKGROUND_COLORS;
     return list.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value;
   };
 
@@ -3851,35 +3851,7 @@ export default function App() {
               className="flex-1 h-full relative overflow-hidden transition-colors duration-700" 
               style={{ backgroundColor: p.screenColor }}
             >
-              {(p.screenStyle === 'cloth' || p.screenStyle === 'speed') && (CLOTH_COLORS.some(c => c.value.toLowerCase() === p.screenColor.toLowerCase()) || SPEED_CLOTH_COLORS.some(c => c.value.toLowerCase() === p.screenColor.toLowerCase())) && (
-                <div className="absolute inset-0 z-0 flex items-center justify-center">
-                  <div 
-                    className={`border-[1.5vw] border-[#3d2b1f] shadow-[inset_0_0_6vh_rgba(0,0,0,0.25)] ${idx === 0 ? 'border-r-0 ml-auto' : 'border-l-0 mr-auto'}`} 
-                    style={{ 
-                      backgroundColor: p.screenColor,
-                      width: '100%',
-                      height: '100%',
-                      aspectRatio: '1/1',
-                      maxHeight: '100%',
-                      maxWidth: '100%'
-                    }}
-                  >
-                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: p.screenStyle === 'speed' ? 'radial-gradient(#000 0.03rem, transparent 0.03rem)' : 'radial-gradient(#000 0.06rem, transparent 0.06rem)', backgroundSize: p.screenStyle === 'speed' ? '0.8vw 0.8vw' : '1.5vw 1.5vw' }} />
-                    {/* Corner Pockets */}
-                    <div className={`absolute top-0 left-0 w-[8vw] h-[8vw] bg-black rounded-br-2xl shadow-inner ${p.screenStyle === 'speed' ? 'border-2 border-white/10' : ''}`} />
-                    <div className={`absolute top-0 right-0 w-[8vw] h-[8vw] bg-black rounded-bl-2xl shadow-inner ${p.screenStyle === 'speed' ? 'border-2 border-white/10' : ''}`} />
-                    <div className={`absolute bottom-0 left-0 w-[8vw] h-[8vw] bg-black rounded-tr-2xl shadow-inner ${p.screenStyle === 'speed' ? 'border-2 border-white/10' : ''}`} />
-                    <div className={`absolute bottom-0 right-0 w-[8vw] h-[8vw] bg-black rounded-tl-2xl shadow-inner ${p.screenStyle === 'speed' ? 'border-2 border-white/10' : ''}`} />
-                    {/* Side Pockets - Only on outside edges */}
-                    {idx === 1 && (
-                      <div className={`absolute top-1/2 right-0 -translate-y-1/2 w-[5vw] h-[8vw] bg-black rounded-l-2xl shadow-inner ${p.screenStyle === 'speed' ? 'border-2 border-white/10' : ''}`} />
-                    )}
-                    {idx === 0 && (
-                      <div className={`absolute top-1/2 left-0 -translate-y-1/2 w-[5vw] h-[8vw] bg-black rounded-r-2xl shadow-inner ${p.screenStyle === 'speed' ? 'border-2 border-white/10' : ''}`} />
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Removed cloth/speed table simulation as per user request */}
               {p.screenStyle === 'dial' && (
                 <div 
                   className="absolute inset-0 opacity-40 z-0" 
@@ -4113,9 +4085,9 @@ export default function App() {
         animate={{ 
           paddingTop: (view === 'teams' || view === 'settings' || view === 'match-details')
             ? `calc(${deviceInfo.isPhone ? '24vh' : (deviceInfo.isTablet ? '8vh' : '10vh')} + ${view === 'match-details' ? '1vh' : '4vh'})`
-            : (view === 'scoreboard' 
-                ? (isNavVisible ? (deviceInfo.isPhone ? '24vh' : (deviceInfo.isTablet ? '8vh' : '10vh')) : 0)
-                : 0),
+            : (view === 'scoreboard' && isNavVisible)
+              ? (deviceInfo.isPhone ? '15vh' : (deviceInfo.isTablet ? '8vh' : '10vh'))
+              : 0,
           y: 0,
           paddingBottom: 0 
         }}
@@ -4230,7 +4202,7 @@ export default function App() {
                 </div>
 
                 {/* Score Cards Grid */}
-                <div className="relative flex items-center justify-center w-full py-0" style={{ transform: 'translateY(-1vh)' }}>
+                <div className="relative flex items-center justify-center w-full py-0">
 
                 <div 
                   className="flex items-center justify-center w-full"
@@ -4647,16 +4619,16 @@ export default function App() {
                           <p className="text-white font-bold uppercase tracking-widest text-left" style={{ fontSize: deviceInfo.titleSizes.tileDesc }}>Note: Individual background options are disabled when full screen background is enabled</p>
                         </div>
                         <div className="shrink-0">
-                          <button 
+                            <button 
                             onClick={(e) => {
                               e.stopPropagation();
                               const nextValue = fullScreenBackdrop === 'none' ? 'black' : 'none';
                               setFullScreenBackdrop(nextValue);
                             }}
-                            className={`w-[14vw] sm:w-14 h-[7vw] sm:h-7 rounded-full transition-colors relative active:scale-95`}
+                            className={`w-[10vw] sm:w-14 h-[5vw] sm:h-7 rounded-full transition-colors relative active:scale-95`}
                             style={{ backgroundColor: fullScreenBackdrop !== 'none' ? player1.color : '#334155' }}
                           >
-                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[2vw] sm:w-[1.25rem] h-[2vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${fullScreenBackdrop !== 'none' ? 'left-[10vw] sm:left-[2rem]' : 'left-[1vw] sm:left-[0.25rem]'}`} />
+                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[4vw] sm:w-[1.25rem] h-[4vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${fullScreenBackdrop !== 'none' ? 'left-[5.5vw] sm:left-[2rem]' : 'left-[0.5vw] sm:left-[0.25rem]'}`} />
                           </button>
                         </div>
                       </div>
@@ -4765,23 +4737,23 @@ export default function App() {
                               label="Screen Background"
                               value={p.screenColor}
                               onChange={(color) => idx === 0 ? setPlayer1(prev => ({...prev, screenColor: color})) : setPlayer2(prev => ({...prev, screenColor: color}))}
-                              colors={p.screenStyle === 'cloth' ? CLOTH_COLORS : p.screenStyle === 'speed' ? SPEED_CLOTH_COLORS : BACKGROUND_COLORS}
+                              colors={BACKGROUND_COLORS}
                               icon={<Maximize className="w-4 h-4" />}
                               isOpen={activePicker === `p${idx + 1}-screen`}
                               onToggle={(isOpen) => setActivePicker(isOpen ? `p${idx + 1}-screen` : null)}
                               themeColor={p.color}
-                              pickerStyle={p.screenStyle || 'default'}
-                              allowedStyles={['default', 'cloth', 'speed']}
+                              pickerStyle="default"
+                              allowedStyles={['default']}
                               onStyleChange={(style) => idx === 0 ? setPlayer1(prev => ({...prev, screenStyle: style})) : setPlayer2(prev => ({...prev, screenStyle: style}))}
                               disabled={false}
                             />
                             {/* Screen Color Indicator Circle - 3rem (w-12 h-12) - Attached to Card Edge */}
                             <div 
-                              className={`absolute w-[6vh] h-[6vh] rounded-full shadow-2xl transition-all duration-500 z-20 top-1/2 border-2 ${idx === 0 ? 'left-0' : 'right-0'}`}
+                              className={`absolute w-[4vh] h-[4vh] sm:w-[6vh] sm:h-[6vh] rounded-full shadow-2xl transition-all duration-500 z-20 top-1/2 border-2 ${idx === 0 ? 'left-0' : 'right-0'}`}
                               style={{ 
                                 backgroundColor: p.screenColor,
                                 borderColor: p.color,
-                                transform: `translateY(-50%) ${idx === 0 ? 'translateX(calc(-1 * (var(--card-padding) + 3vh)))' : 'translateX(calc(var(--card-padding) + 3vh))'}`,
+                                transform: `translateY(-50%) ${idx === 0 ? 'translateX(calc(-1 * (var(--card-padding) + 2vh)))' : 'translateX(calc(var(--card-padding) + 2vh))'}`,
                                 opacity: 1,
                                 filter: `drop-shadow(0 0 1.5vh ${p.color}44)`
                               } as any}
@@ -4845,10 +4817,10 @@ export default function App() {
                                 setCurrentBreakPlayerId('none');
                               }
                             }}
-                            className={`w-[14vw] sm:w-14 h-[7vw] sm:h-7 rounded-full transition-colors relative`}
+                            className={`w-[10vw] sm:w-14 h-[5vw] sm:h-7 rounded-full transition-colors relative`}
                             style={{ backgroundColor: isBreakTrackingEnabled ? player1.color : '#334155' }}
                           >
-                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[2vw] sm:w-[1.25rem] h-[2vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${isBreakTrackingEnabled ? 'left-[10vw] sm:left-[2rem]' : 'left-[1vw] sm:left-[0.25rem]'}`} />
+                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[4vw] sm:w-[1.25rem] h-[4vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${isBreakTrackingEnabled ? 'left-[5.5vw] sm:left-[2rem]' : 'left-[0.5vw] sm:left-[0.25rem]'}`} />
                           </button>
                         </div>
                       </div>
@@ -4888,10 +4860,10 @@ export default function App() {
                               e.stopPropagation();
                               setShowDeviceTime(!showDeviceTime);
                             }}
-                            className={`w-[14vw] sm:w-14 h-[7vw] sm:h-7 rounded-full transition-all active:scale-95 relative`}
+                            className={`w-[10vw] sm:w-14 h-[5vw] sm:h-7 rounded-full transition-all active:scale-95 relative`}
                             style={{ backgroundColor: showDeviceTime ? player1.color : '#334155' }}
                           >
-                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[2vw] sm:w-[1.25rem] h-[2vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${showDeviceTime ? 'left-[10vw] sm:left-[2rem]' : 'left-[1vw] sm:left-[0.25rem]'}`} />
+                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[4vw] sm:w-[1.25rem] h-[4vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${showDeviceTime ? 'left-[5.5vw] sm:left-[2rem]' : 'left-[0.5vw] sm:left-[0.25rem]'}`} />
                           </button>
                         </div>
                       </div>
@@ -4935,10 +4907,10 @@ export default function App() {
                               setIsShotClockEnabled(!isShotClockEnabled);
                               if (isShotClockEnabled) pauseTimer();
                             }}
-                            className={`w-[14vw] sm:w-14 h-[7vw] sm:h-7 rounded-full transition-all active:scale-95 relative`}
+                            className={`w-[10vw] sm:w-14 h-[5vw] sm:h-7 rounded-full transition-all active:scale-95 relative`}
                             style={{ backgroundColor: isShotClockEnabled ? player2.color : '#334155' }}
                           >
-                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[2vw] sm:w-[1.25rem] h-[2vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${isShotClockEnabled ? 'left-[10vw] sm:left-[2rem]' : 'left-[1vw] sm:left-[0.25rem]'}`} />
+                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[4vw] sm:w-[1.25rem] h-[4vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${isShotClockEnabled ? 'left-[5.5vw] sm:left-[2rem]' : 'left-[0.5vw] sm:left-[0.25rem]'}`} />
                           </button>
                         </div>
                       </div>
@@ -5014,10 +4986,10 @@ export default function App() {
                               setIsMatchClockEnabled(!isMatchClockEnabled);
                               if (isMatchClockEnabled) pauseTimer();
                             }}
-                            className={`w-[14vw] sm:w-14 h-[7vw] sm:h-7 rounded-full transition-all active:scale-95 relative`}
+                            className={`w-[10vw] sm:w-14 h-[5vw] sm:h-7 rounded-full transition-all active:scale-95 relative`}
                             style={{ backgroundColor: isMatchClockEnabled ? player1.color : '#334155' }}
                           >
-                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[2vw] sm:w-[1.25rem] h-[2vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${isMatchClockEnabled ? 'left-[10vw] sm:left-[2rem]' : 'left-[1vw] sm:left-[0.25rem]'}`} />
+                            <div className={`absolute top-[0.5vw] sm:top-[0.25rem] w-[4vw] sm:w-[1.25rem] h-[4vw] sm:h-[1.25rem] bg-white rounded-full transition-all ${isMatchClockEnabled ? 'left-[5.5vw] sm:left-[2rem]' : 'left-[0.5vw] sm:left-[0.25rem]'}`} />
                           </button>
                         </div>
                       </div>
@@ -5544,13 +5516,7 @@ export default function App() {
                     </div>
 
                     {/* Frame Table Extracted */}
-                    {activeSetupTab === 'singles' ? (
-                      <SinglesMatchDetailsTable 
-                        match={match} 
-                        player1Color={player1.color} 
-                        player2Color={player2.color} 
-                      />
-                    ) : activeSetupTab === 'group' ? (
+                    {activeSetupTab === 'group' ? (
                       <GroupMatchDetailsTable 
                         match={match} 
                         player1Color={player1.color} 

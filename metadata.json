@@ -1,5 +1,6 @@
 {
-  "name": "Pool-Pro | Professional Pool Scoreboard & Tournament App",
+  "name": "Pool-Pro.uk",
   "description": "Pool-Pro.uk is the best digital scoreboard and tournament manager for Pool and Billiards. Features include frame tracking, shot clocks, match history, and professional data export.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }

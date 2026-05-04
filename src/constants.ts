@@ -12,6 +12,7 @@ const darkRedBallThumb = '/assets/balls/mini_balls/red_dark_poolball_thumb.webp'
 const darkRedBallMedium = '/assets/balls/medium_balls/red_dark_poolball_medium.webp';
 
 const brightOrangeBall = '/assets/balls/big_balls/orange_bright_poolball.webp';
+const brightOrangeBallThumb = '/assets/balls/mini_balls/orange_bright_poolball_thumb.webp';
 const brightOrangeBallMedium = '/assets/balls/medium_balls/orange_bright_poolball_medium.webp';
 
 const orangeBall = '/assets/balls/big_balls/orange_light_poolball.webp';
@@ -23,6 +24,7 @@ const darkOrangeBallThumb = '/assets/balls/mini_balls/orange_dark_poolball_thumb
 const darkOrangeBallMedium = '/assets/balls/medium_balls/orange_dark_poolball_medium.webp';
 
 const brightYellowBall = '/assets/balls/big_balls/yellow_bright_poolball.webp';
+const brightYellowBallThumb = '/assets/balls/mini_balls/yellow_bright_poolball_thumb.webp';
 const brightYellowBallMedium = '/assets/balls/medium_balls/yellow_bright_poolball_medium.webp';
 
 const yellowBall = '/assets/balls/big_balls/yellow_poolball.webp';
@@ -30,6 +32,7 @@ const yellowBallThumb = '/assets/balls/mini_balls/yellow_poolball_thumb.webp';
 const yellowBallMedium = '/assets/balls/medium_balls/yellow_poolball_medium.webp';
 
 const brightGreenBall = '/assets/balls/big_balls/green_bright_poolball.webp';
+const brightGreenBallThumb = '/assets/balls/mini_balls/green_bright_poolball_thumb.webp';
 const brightGreenBallMedium = '/assets/balls/medium_balls/green_bright_poolball_medium.webp';
 
 const greenBall = '/assets/balls/big_balls/green_poolball.webp';
@@ -49,6 +52,7 @@ const purpleBallThumb = '/assets/balls/mini_balls/dark_purple_poolball_thumb.web
 const purpleBallMedium = '/assets/balls/medium_balls/dark_purple_poolball_medium.webp';
 
 const brightPinkBall = '/assets/balls/big_balls/pink_bright_poolball.webp';
+const brightPinkBallThumb = '/assets/balls/mini_balls/pink_bright_poolball_thumb.webp';
 const brightPinkBallMedium = '/assets/balls/medium_balls/pink_bright_poolball_medium.webp';
 
 const pinkBall = '/assets/balls/big_balls/pink_poolball.webp';
@@ -168,21 +172,21 @@ export const POOL_BALLS = [
   { number: 11, name: 'Redish', value: '#F87171', image: redishBall, thumbnail: redishBallThumb, mediumImage: redishBallMedium },
   { number: 7, name: 'Dark Red', value: '#7F1D1D', image: darkRedBall, thumbnail: darkRedBallThumb, mediumImage: darkRedBallMedium },
   // ORANGES
-  { number: 16, name: 'Bright Orange', value: '#FF8C00', image: brightOrangeBall, thumbnail: orangeBallThumb, mediumImage: brightOrangeBallMedium },
+  { number: 16, name: 'Bright Orange', value: '#FF8C00', image: brightOrangeBall, thumbnail: brightOrangeBallThumb, mediumImage: brightOrangeBallMedium },
   { number: 5, name: 'Orange', value: '#FFA500', image: orangeBall, thumbnail: orangeBallThumb, mediumImage: orangeBallMedium },
   { number: 13, name: 'Dark Orange', value: '#7C2D12', image: darkOrangeBall, thumbnail: darkOrangeBallThumb, mediumImage: darkOrangeBallMedium },
   // YELLOWS
-  { number: 15, name: 'Bright Yellow', value: '#FFFF00', image: brightYellowBall, thumbnail: yellowBallThumb, mediumImage: brightYellowBallMedium },
+  { number: 15, name: 'Bright Yellow', value: '#FFFF00', image: brightYellowBall, thumbnail: brightYellowBallThumb, mediumImage: brightYellowBallMedium },
   { number: 1, name: 'Yellow', value: '#FFD700', image: yellowBall, thumbnail: yellowBallThumb, mediumImage: yellowBallMedium },
   // GREENS
-  { number: 18, name: 'Bright Green', value: '#00FF00', image: brightGreenBall, thumbnail: greenBallThumb, mediumImage: brightGreenBallMedium },
+  { number: 18, name: 'Bright Green', value: '#00FF00', image: brightGreenBall, thumbnail: brightGreenBallThumb, mediumImage: brightGreenBallMedium },
   { number: 6, name: 'Green', value: '#008000', image: greenBall, thumbnail: greenBallThumb, mediumImage: greenBallMedium },
   // BLUES
   { number: 2, name: 'Blue', value: '#0000FF', image: blueBall, thumbnail: blueBallThumb, mediumImage: blueBallMedium },
   // PURPLES / PINKS
   { number: 10, name: 'Lilac', value: '#D8B4FE', image: lilacBall, thumbnail: lilacBallThumb, mediumImage: lilacBallMedium },
   { number: 4, name: 'Purple', value: '#800080', image: purpleBall, thumbnail: purpleBallThumb, mediumImage: purpleBallMedium },
-  { number: 17, name: 'Bright Pink', value: '#FF69B4', image: brightPinkBall, thumbnail: pinkBallThumb, mediumImage: brightPinkBallMedium },
+  { number: 17, name: 'Bright Pink', value: '#FF69B4', image: brightPinkBall, thumbnail: brightPinkBallThumb, mediumImage: brightPinkBallMedium },
   { number: 9, name: 'Pink', value: '#F472B6', image: pinkBall, thumbnail: pinkBallThumb, mediumImage: pinkBallMedium },
   // NEUTRALS
   { number: 12, name: 'White', value: '#FFFFFF', image: whiteBall, thumbnail: whiteBallThumb, mediumImage: whiteBallMedium },

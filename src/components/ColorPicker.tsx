@@ -11,9 +11,9 @@ interface ColorPickerProps {
   isOpen: boolean;
   onToggle: (isOpen: boolean) => void;
   themeColor?: string;
-  pickerStyle?: 'default' | 'balls' | 'cloth' | 'speed' | 'dial' | 'backdrop';
-  onStyleChange?: (style: 'default' | 'balls' | 'cloth' | 'speed' | 'dial' | 'backdrop') => void;
-  allowedStyles?: ('default' | 'balls' | 'cloth' | 'speed' | 'dial' | 'backdrop')[];
+  pickerStyle?: 'default' | 'balls' | 'dial' | 'backdrop' | 'cloth';
+  onStyleChange?: (style: 'default' | 'balls' | 'dial' | 'backdrop' | 'cloth') => void;
+  allowedStyles?: ('default' | 'balls' | 'dial' | 'backdrop' | 'cloth')[];
   disabled?: boolean;
 }
 
@@ -108,40 +108,44 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               <p className="font-bold uppercase tracking-wider text-slate-500 text-[2vw] sm:text-[1.5vh]">{label}</p>
             )}
             <div className="flex items-center gap-[0.5vw] h-[8vh] sm:h-[10vh]">
-              {(pickerStyle === 'balls' || pickerStyle === 'backdrop') && colors.find(c => c.value.toLowerCase() === value.toLowerCase()) ? (
-                <div className={`${pickerStyle === 'backdrop' ? 'w-[18vw] sm:w-[14vw]' : 'w-16 sm:w-20'} h-[6vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/10 shadow-lg flex items-center justify-center bg-slate-800`}>
-                  {(() => {
-                    const selectedItem = colors.find(c => c.value.toLowerCase() === value.toLowerCase());
-                    const imgSrc = selectedItem?.thumbnail || selectedItem?.image;
-                    if (!imgSrc) return <div className="text-[2vw] sm:text-[1vh] text-slate-500 font-bold">{selectedItem?.name}</div>;
-                    return (
+              {(() => {
+                const selectedItem = colors.find(c => c.value.toLowerCase() === value.toLowerCase());
+                if (pickerStyle === 'backdrop' && selectedItem) {
+                  const imgSrc = selectedItem.thumbnail || selectedItem.image;
+                  return (
+                    <div className="w-[12vw] sm:w-[14vw] h-[8vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/10 shadow-lg flex items-center justify-center bg-slate-800">
+                      {imgSrc ? (
+                        <img 
+                          src={imgSrc} 
+                          alt="Selected"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = document.createElement('div');
+                            fallback.className = 'text-[2.2vw] sm:text-[1vh] text-slate-400 font-bold uppercase p-1 text-center';
+                            fallback.innerText = selectedItem.name;
+                            target.parentElement?.appendChild(fallback);
+                          }}
+                        />
+                      ) : (
+                        <div className="text-[2.2vw] sm:text-[1vh] text-slate-500 font-bold">{selectedItem.name}</div>
+                      )}
+                    </div>
+                  );
+                } else if (pickerStyle === 'balls' && selectedItem && (selectedItem.thumbnail || selectedItem.image)) {
+                  return (
+                    <div className="w-5 h-5 sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-slate-800">
                       <img 
-                        src={imgSrc} 
-                        alt="Selected"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const fallback = document.createElement('div');
-                          fallback.className = 'text-[2vw] sm:text-[1vh] text-slate-400 font-bold uppercase p-1 text-center';
-                          fallback.innerText = selectedItem?.name || 'Selected';
-                          target.parentElement?.appendChild(fallback);
-                        }}
+                        src={selectedItem.thumbnail || selectedItem.image} 
+                        alt="Selected Ball"
+                        className="w-full h-full object-contain"
                       />
-                    );
-                  })()}
-                </div>
-              ) : pickerStyle === 'balls' && colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.image ? (
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg">
-                  <img 
-                    src={colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.image} 
-                    alt="Selected Ball"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              ) : (
-                <div className="w-[8vw] h-[8vw] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20" style={{ backgroundColor: value }} />
-              )}
+                    </div>
+                  );
+                }
+                return <div className="w-[5vw] h-[5vw] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20" style={{ backgroundColor: value }} />;
+              })()}
               <span className="text-[2.2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
                 {colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value}
               </span>
@@ -176,9 +180,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   const labelMap = { 
                     default: 'Grid', 
                     balls: 'Balls', 
-                    cloth: 'Standard', 
-                    speed: 'Speed',
-                    dial: 'Dial'
+                    dial: 'Dial',
+                    backdrop: 'Backdrop'
                   };
                   return (
                     <button
@@ -248,6 +251,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                             src={ball.thumbnail || ball.image} 
                             alt={ball.name} 
                             className="absolute inset-0 w-full h-full object-contain rounded-full p-0.5"
+                            loading="lazy"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
@@ -285,6 +289,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                              src={b.thumbnail || b.image} 
                              alt={b.name} 
                              className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                             loading="lazy"
                              onError={(e) => {
                                (e.target as HTMLImageElement).style.display = 'none';
                                (e.target as HTMLImageElement).parentElement!.classList.add('flex', 'items-center', 'justify-center');
@@ -325,16 +330,11 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       className={`flex flex-col gap-[0.4vmin] p-[0.6vmin] rounded-xl border transition-all active:scale-95 ${isActive ? 'bg-white/10 border-white' : 'bg-white/5 border-transparent hover:bg-white/10 shrink-0'}`}
                     >
                       <div 
-                        className="w-full h-[3.5vh] sm:h-[7vh] rounded-lg shadow-inner flex items-center justify-center overflow-hidden relative"
+                        className="w-full h-[1.75vh] sm:h-[7vh] rounded-lg shadow-inner flex items-center justify-center overflow-hidden relative"
                         style={{ backgroundColor: cloth.value }}
                       >
                          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#000 0.0625rem, transparent 0.0625rem)', backgroundSize: '0.4vh 0.4vh' }} />
                          <div className="absolute inset-0 shadow-[inset_0_0_1.25rem_rgba(0,0,0,0.3)]" />
-                         {pickerStyle === 'speed' && (
-                           <div className="absolute top-[0.4vh] right-[0.4vh]">
-                             <Zap className="w-[1vh] h-[1vh] text-white/40" />
-                           </div>
-                         )}
                       </div>
                       <span className="text-[1vh] sm:text-[1.1vh] font-bold text-slate-400 uppercase tracking-tighter text-center truncate w-full">{cloth.name}</span>
                     </button>
