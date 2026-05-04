@@ -53,7 +53,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
         <Trophy 
           className="transition-all duration-500" 
           style={{ 
-            stroke: 'url(#cup-gradient)',
+            stroke: 'url(#topbar-cup-gradient)',
             width: deviceInfo.isPhone ? '8.64vh' : (deviceInfo.isTablet ? '5.76vh' : '7.2vh'),
             height: deviceInfo.isPhone ? '8.64vh' : (deviceInfo.isTablet ? '5.76vh' : '7.2vh')
           }}
@@ -72,19 +72,19 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             className="w-auto overflow-visible"
           >
             <defs>
-              <linearGradient id="selected-player-grad-svg" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={isLoaded ? player1.color : '#334155'} />
-                <stop offset="100%" stopColor={isLoaded ? player2.color : '#475569'} />
+              <linearGradient id="topbar-logo-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={player1.color} />
+                <stop offset="100%" stopColor={player2.color} />
               </linearGradient>
-              <linearGradient id="cup-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={isLoaded ? player1.color : '#334155'} />
-                <stop offset="100%" stopColor={isLoaded ? player2.color : '#475569'} />
+              <linearGradient id="topbar-cup-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={player1.color} />
+                <stop offset="100%" stopColor={player2.color} />
               </linearGradient>
             </defs>
               <text 
                 x="0" 
                 y="32" 
-                fill="url(#selected-player-grad-svg)"
+                fill="url(#topbar-logo-gradient)"
                 style={{ 
                   fontFamily: 'Inter, sans-serif', 
                   fontWeight: 900, 
@@ -135,7 +135,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             <Minimize 
               className="relative z-10 transition-transform group-hover:scale-110"
               style={{ 
-                stroke: 'url(#cup-gradient)',
+                stroke: 'url(#topbar-cup-gradient)',
                 width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
                 height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
               }} 
@@ -143,7 +143,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             <Maximize 
               className="relative z-10 transition-transform group-hover:scale-110"
               style={{ 
-                stroke: 'url(#cup-gradient)',
+                stroke: 'url(#topbar-cup-gradient)',
                 width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
                 height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
               }} 
@@ -164,7 +164,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
           <Trophy 
             className="relative z-10 transition-transform group-hover:scale-110"
             style={{ 
-              stroke: 'url(#cup-gradient)',
+              stroke: 'url(#topbar-cup-gradient)',
               width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
               height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
             }} 
@@ -184,7 +184,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
           <Users 
             className="relative z-10 transition-transform group-hover:scale-110"
             style={{ 
-              stroke: 'url(#cup-gradient)',
+              stroke: 'url(#topbar-cup-gradient)',
               width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
               height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
             }} 
@@ -204,7 +204,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
           <Settings 
             className="relative z-10 transition-transform group-hover:scale-110"
             style={{ 
-              stroke: 'url(#cup-gradient)',
+              stroke: 'url(#topbar-cup-gradient)',
               width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
               height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
             }} 

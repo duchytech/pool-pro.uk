@@ -3767,11 +3767,11 @@ export default function App() {
               }}
             />
             <h1 
-              className="font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r"
+              className="font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b"
               style={{ 
                 fontSize: '6.5vh',
                 lineHeight: 1,
-                backgroundImage: `linear-gradient(to right, ${player1.color}, ${player2.color})`,
+                backgroundImage: `linear-gradient(to bottom, ${player1.color}, ${player2.color})`,
                 fontFamily: 'Inter, sans-serif'
               }}
             >

@@ -107,13 +107,15 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             {pickerStyle !== 'backdrop' && (
               <p className="font-bold uppercase tracking-wider text-slate-500 text-[2vw] sm:text-[1.5vh]">{label}</p>
             )}
-            <div className="flex items-center gap-[0.5vw] h-[8vh] sm:h-[10vh]">
+            <div className={`flex items-center gap-[2.5vw] sm:gap-[1vw] transition-all`}>
               {(() => {
                 const selectedItem = colors.find(c => c.value.toLowerCase() === value.toLowerCase());
+                
+                // 1. BACKDROP (POOL TABLE) STYLE
                 if (pickerStyle === 'backdrop' && selectedItem) {
                   const imgSrc = selectedItem.thumbnail || selectedItem.image;
                   return (
-                    <div className="w-[12vw] sm:w-[14vw] h-[8vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/10 shadow-lg flex items-center justify-center bg-slate-800">
+                    <div className="w-[22vw] sm:w-[14vw] h-[7vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/20 shadow-lg flex items-center justify-center bg-slate-800 shrink-0">
                       {imgSrc ? (
                         <img 
                           src={imgSrc} 
@@ -133,9 +135,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       )}
                     </div>
                   );
-                } else if (pickerStyle === 'balls' && selectedItem && (selectedItem.thumbnail || selectedItem.image)) {
+                } 
+                
+                // 2. BALLS STYLE
+                else if (pickerStyle === 'balls' && selectedItem && (selectedItem.thumbnail || selectedItem.image)) {
                   return (
-                    <div className="w-[10vw] h-[10vw] sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-slate-800">
+                    <div className="w-[10vw] h-[10vw] min-w-[32px] min-h-[32px] sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg bg-slate-800 shrink-0">
                       <img 
                         src={selectedItem.thumbnail || selectedItem.image} 
                         alt="Selected Ball"
@@ -144,9 +149,16 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     </div>
                   );
                 }
-                return <div className="w-[5vw] h-[5vw] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20" style={{ backgroundColor: value }} />;
+                
+                // 3. DEFAULT (STANDARD COLOR) STYLE
+                return (
+                  <div 
+                    className="w-[10vw] h-[10vw] min-w-[32px] min-h-[32px] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20 shrink-0" 
+                    style={{ backgroundColor: value }} 
+                  />
+                );
               })()}
-              <span className="text-[2.2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
+              <span className="text-[2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
                 {colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value}
               </span>
             </div>
@@ -158,20 +170,22 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: isMobile && pickerStyle === 'default' ? 1.2 : 0.95 }}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ 
               opacity: 1, 
               y: 0, 
-              scale: isMobile && pickerStyle === 'default' ? 1.25 : 1 
+              scale: 1 
             }}
-            exit={{ opacity: 0, y: 10, scale: isMobile && pickerStyle === 'default' ? 1.2 : 0.95 }}
-            className={`absolute top-full mt-[1vh] z-[110] bg-slate-900 border rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col items-center origin-top inset-x-0
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            className={`absolute top-full mt-[1.5vh] z-[200] bg-slate-900 border rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col items-center origin-top
               ${pickerStyle === 'default' 
-                ? 'py-[2.5vh] gap-[1vh] px-[6%]' 
-                : pickerStyle === 'backdrop' ? 'pt-[1vh] pb-[2.5vh] gap-[1vh] px-[2%]' : 'pt-[1.5vh] pb-[4.5vh] gap-[1.5vh] sm:pt-[2.5vh] sm:pb-[5.5vh] px-[6%]' 
-              }`}
+                ? 'py-4 sm:py-[2.5vh] gap-4 px-[6%]' 
+                : pickerStyle === 'backdrop' ? 'pt-2 pb-6 gap-2 px-[2.5%]' : 'pt-4 pb-8 gap-4 px-[6%]' 
+              }
+              ${isMobile ? 'fixed left-1/2 -translate-x-1/2 w-[92vw]' : 'inset-x-0'}
+            `}
             style={{ 
-              borderColor: (themeColor || '#10b981') + '33'
+              borderColor: (themeColor || '#10b981') + '33',
             }}
           >
             {allowedStyles.length > 1 && (
@@ -282,7 +296,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       }}
                       className={`flex flex-col gap-1 p-1 rounded-xl border-2 transition-all active:scale-95 ${isActive ? 'bg-white/20 border-white ring-2 ring-white/30' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                     >
-                      <div className="w-full aspect-[16/20] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
+                      <div className="w-full aspect-[21/9] sm:aspect-[16/10] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
                          { (b.thumbnail || b.image) ? (
                            <img 
                              src={b.thumbnail || b.image} 
