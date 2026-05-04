@@ -15,7 +15,7 @@ export const GroupMatchDetailsTable: React.FC<GroupMatchDetailsTableProps> = ({
 }) => {
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-800/50 shadow-2xl bg-black/40 backdrop-blur-3xl">
-      <div className="w-full flex flex-col scrollbar-hide overflow-x-auto min-w-[400px]">
+      <div className="w-full flex flex-col scrollbar-hide overflow-x-auto min-w-[50vw]">
         {/* Header Row */}
         <div className="flex items-center bg-slate-900/80 border-b-2 border-slate-800/50">
           <div className="flex pl-[2vw] pr-0 sm:px-[1.5vw] py-[1.5vh] sm:py-5 text-[2.2vw] sm:text-xs uppercase tracking-widest font-black text-slate-500 w-[6%] whitespace-nowrap items-center">#</div>
@@ -46,7 +46,7 @@ export const GroupMatchDetailsTable: React.FC<GroupMatchDetailsTableProps> = ({
               </div>
               <div className="flex px-[1vw] sm:px-5 py-[2vh] w-[18%] items-center overflow-hidden">
                 <div className="flex items-center gap-[0.5vw] sm:gap-2 truncate">
-                  <div className="w-[0.8vw] sm:w-1.5 h-[0.8vw] sm:h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                  <div className="w-[0.8vw] sm:w-[1.2vw] h-[0.8vw] sm:h-[1.2vw] rounded-full bg-emerald-500 animate-pulse shrink-0" />
                   {frame.winnerName && frame.winnerName.includes('/') ? (
                     <div className="flex flex-col">
                       <span className="text-[2vw] sm:text-xs font-black text-emerald-400 uppercase tracking-tight truncate leading-none">{frame.winnerName.split('/')[0].trim()}</span>
@@ -59,7 +59,7 @@ export const GroupMatchDetailsTable: React.FC<GroupMatchDetailsTableProps> = ({
               </div>
 
               <div className="flex px-[1vw] sm:px-5 py-[2vh] justify-center w-[12%] items-center">
-                <span className="text-[1.8vw] sm:text-[10px] sm:text-xs font-black text-amber-500 uppercase truncate">
+                <span className="text-[1.8vw] sm:text-[0.625rem] sm:text-xs font-black text-amber-500 uppercase truncate">
                   {frame.referee?.name || match.referee?.name || '-'}
                 </span>
               </div>
@@ -79,7 +79,7 @@ export const GroupMatchDetailsTable: React.FC<GroupMatchDetailsTableProps> = ({
               <div className="flex px-[1vw] sm:px-5 py-[2vh] justify-end w-[8%] pr-[2vw] items-center">
                 {frame.duration !== undefined && (
                   <div className="flex items-center justify-end gap-[0.5vw] sm:gap-1 mt-0.5">
-                    <Clock className="w-[2vw] sm:w-2.5 h-[2vw] sm:h-2.5 text-slate-700 font-bold" />
+                    <Clock className="w-[2vw] sm:w-[1.5vw] h-[2vw] sm:h-[1.5vw] text-slate-700 font-bold" />
                     <span className="text-[2vw] sm:text-xs font-black text-slate-500 uppercase tabular-nums whitespace-nowrap">
                       {Math.floor(frame.duration / 60)}m {frame.duration % 60}s
                     </span>

@@ -44,7 +44,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
         opacity: 1
       }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="fixed top-0 left-0 right-0 bg-slate-950/90 backdrop-blur-2xl z-50 flex items-center justify-between pl-[0.5vw] pr-[0.5vw] shadow-[0_4px_30px_rgba(0,0,0,0.5)] border-b border-white/5"
+      className="fixed top-0 left-0 right-0 bg-slate-950/90 backdrop-blur-2xl z-50 flex items-center justify-between pl-[0.5vw] pr-[0.5vw] shadow-[0_0.4vh_3vh_rgba(0,0,0,0.5)] border-b border-white/5"
       style={{ 
         height: deviceInfo.isPhone ? '15vh' : (deviceInfo.isTablet ? '8vh' : '10vh')
       }}
@@ -64,6 +64,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             height: deviceInfo.isPhone ? '13.5vh' : (deviceInfo.isTablet ? '7.2vh' : '9vh'),
           }}
         >
+          <span className="sr-only">Pool-Pro | Digital Pool Scoreboard & Tournament Manager</span>
           <svg 
             height="100%" 
             viewBox="0 0 210 40" 

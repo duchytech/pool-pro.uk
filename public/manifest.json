@@ -1,5 +1,5 @@
 {
-  "name": "Pool-Pro.uk",
+  "name": "Pool-Pro | Professional Pool Scoreboard",
   "short_name": "Pool-Pro",
   "id": "./",
   "start_url": "./",
@@ -7,7 +7,7 @@
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "description": "Professional Pool Scoreboard and Match Tracker",
+  "description": "Professional Pool Scoreboard, Tournament Manager and Match Statistics Tracker - poolpro.uk",
   "orientation": "any",
   "icons": [
     {

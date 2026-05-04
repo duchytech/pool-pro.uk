@@ -159,10 +159,10 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
 
   return (
     <div className="space-y-12">
-      {/* Quick Singles Entry */}
+      {/* Quick Match Entry */}
       <div className="grid grid-cols-2 gap-4 sm:gap-10">
         <div className="space-y-4">
-          <label className="font-black uppercase tracking-widest text-center block text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player1.color }}>Player 1</label>
+          <label className="font-black uppercase tracking-widest text-center block text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player1.color }}>Player 1</label>
           <div className="relative group">
             <input 
               value={groupSetup.quickP1} 
@@ -205,7 +205,7 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
           </div>
         </div>
         <div className="space-y-4">
-          <label className="font-black uppercase tracking-widest text-center block text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player2.color }}>Player 2</label>
+          <label className="font-black uppercase tracking-widest text-center block text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player2.color }}>Player 2</label>
           <div className="relative group">
             <input 
               value={groupSetup.quickP2} 
@@ -264,7 +264,7 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
       {/* Side A Setup */}
       <div className="space-y-4 sm:space-y-8">
         <div className="space-y-3 sm:space-y-4">
-          <label className="font-black uppercase tracking-widest text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player1.color }}>Players (Side A)</label>
+          <label className="font-black uppercase tracking-widest text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player1.color }}>Players (Side A)</label>
           <div className="space-y-4 sm:space-y-6">
             {team1Roster.map((player, idx) => (
               <div key={idx} className="flex items-stretch gap-2 sm:gap-4 group">
@@ -336,7 +336,7 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleOpenPicker(1, 'singles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-[0.625rem] font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player1.color + '44', 
                     color: player1.color,
@@ -344,11 +344,11 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
-                  Create Singles
+                  Add Singles
                 </button>
                 <button 
                   onClick={() => handleOpenPicker(1, 'doubles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-[0.625rem] font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player1.color + '44', 
                     color: player1.color,
@@ -367,7 +367,7 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
       {/* Side B Setup */}
       <div className="space-y-4 sm:space-y-8">
         <div className="space-y-3 sm:space-y-4">
-          <label className="font-black uppercase tracking-widest text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player2.color }}>Players (Side B)</label>
+          <label className="font-black uppercase tracking-widest text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player2.color }}>Players (Side B)</label>
           <div className="space-y-4 sm:space-y-6">
             {team2Roster.map((player, idx) => (
               <div key={idx} className="flex items-stretch gap-2 sm:gap-4 group">
@@ -439,7 +439,7 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleOpenPicker(2, 'singles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-[0.625rem] font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player2.color + '44', 
                     color: player2.color,
@@ -447,11 +447,11 @@ export const GroupSetup: React.FC<GroupSetupProps> = ({
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
-                  Create Singles
+                  Add Singles
                 </button>
                 <button 
                   onClick={() => handleOpenPicker(2, 'doubles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-[0.625rem] font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player2.color + '44', 
                     color: player2.color,

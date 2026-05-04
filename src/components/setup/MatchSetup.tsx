@@ -48,8 +48,8 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
       <div className="space-y-4 sm:space-y-8">
         <div className="space-y-2 sm:space-y-4">
           <div className="flex items-center justify-between">
-            <label className="font-black uppercase tracking-widest text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player1.color }}>Home Team Name</label>
-            <Users className="w-4 h-4" style={{ color: player1.color }} />
+            <label className="font-black uppercase tracking-widest text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player1.color }}>Home Team Name</label>
+            <Users className="w-[1.8vh] h-[1.8vh] sm:w-[1.5vw] sm:h-[1.5vw]" style={{ color: player1.color }} />
           </div>
           <input 
             value={team1Name} 
@@ -65,7 +65,7 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
           />
         </div>
         <div className="space-y-3 sm:space-y-4">
-          <label className="font-black uppercase tracking-widest text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player1.color }}>Players</label>
+          <label className="font-black uppercase tracking-widest text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player1.color }}>Players</label>
           <div className="space-y-4 sm:space-y-6">
             {team1Roster.map((player, idx) => (
               <div key={idx} className="flex items-stretch gap-2 sm:gap-4 group">
@@ -108,7 +108,7 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
                       className="h-full px-1.5 sm:px-2 text-red-500/60 hover:text-red-500 hover:bg-red-500/10 transition-all active:scale-90"
                       title="Clear Player"
                     >
-                      <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <Trash2 className="w-[1.8vh] h-[1.8vh] sm:w-[1.5vw] sm:h-[1.5vw]" />
                     </button>
                   </div>
                 </div>
@@ -126,13 +126,13 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
-                <Plus className="w-5 h-5 transition-transform group-hover:rotate-90" />
+                <Plus className="w-[2.2vh] h-[2.2vh] sm:w-[2vw] sm:h-[2vw] transition-transform group-hover:rotate-90" />
                 Add Player
               </button>
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleOpenPicker(1, 'singles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player1.color + '44', 
                     color: player1.color,
@@ -144,7 +144,7 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
                 </button>
                 <button 
                   onClick={() => handleOpenPicker(1, 'doubles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player1.color + '44', 
                     color: player1.color,
@@ -164,8 +164,8 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
       <div className="space-y-4 sm:space-y-8">
         <div className="space-y-2 sm:space-y-4">
           <div className="flex items-center justify-between">
-            <label className="font-black uppercase tracking-widest text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player2.color }}>Away Team Name</label>
-            <Users className="w-4 h-4" style={{ color: player2.color }} />
+            <label className="font-black uppercase tracking-widest text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player2.color }}>Away Team Name</label>
+            <Users className="w-[1.8vh] h-[1.8vh] sm:w-[1.5vw] sm:h-[1.5vw]" style={{ color: player2.color }} />
           </div>
           <input 
             value={team2Name} 
@@ -181,7 +181,7 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
           />
         </div>
         <div className="space-y-3 sm:space-y-4">
-          <label className="font-black uppercase tracking-widest text-[10px] sm:text-sm" style={{ fontSize: labelFontSize, color: player2.color }}>Players</label>
+          <label className="font-black uppercase tracking-widest text-[2.5vw] sm:text-xs" style={{ fontSize: labelFontSize, color: player2.color }}>Players</label>
           <div className="space-y-4 sm:space-y-6">
             {team2Roster.map((player, idx) => (
               <div key={idx} className="flex items-stretch gap-2 sm:gap-4 group">
@@ -224,7 +224,7 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
                       className="h-full px-1.5 sm:px-2 text-red-500/60 hover:text-red-500 hover:bg-red-500/10 transition-all"
                       title="Clear Player"
                     >
-                      <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <Trash2 className="w-[1.8vh] h-[1.8vh] sm:w-[1.5vw] sm:h-[1.5vw]" />
                     </button>
                   </div>
                 </div>
@@ -248,19 +248,19 @@ export const MatchSetup: React.FC<MatchSetupProps> = ({
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleOpenPicker(2, 'singles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player2.color + '44', 
                     color: player2.color,
                     backgroundColor: 'rgba(0,0,0,0.2)'
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none group-hover:animate-shimmer" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:animate-shimmer" />
                   Create Singles
                 </button>
                 <button 
                   onClick={() => handleOpenPicker(2, 'doubles')}
-                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
+                  className="flex-1 py-3 border-2 border-dashed rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-[2.2vw] sm:text-xs font-black uppercase tracking-widest relative overflow-hidden group shadow-lg"
                   style={{ 
                     borderColor: player2.color + '44', 
                     color: player2.color,

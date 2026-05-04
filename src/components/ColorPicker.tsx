@@ -105,17 +105,31 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           </div>
           <div>
             {pickerStyle !== 'backdrop' && (
-              <p className="font-bold uppercase tracking-wider text-slate-500 text-[10px] sm:text-[1.5vh]">{label}</p>
+              <p className="font-bold uppercase tracking-wider text-slate-500 text-[2vw] sm:text-[1.5vh]">{label}</p>
             )}
             <div className="flex items-center gap-[0.5vw] h-[8vh] sm:h-[10vh]">
-              {(pickerStyle === 'balls' || pickerStyle === 'backdrop') && colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.thumbnail ? (
-                <div className={`${pickerStyle === 'backdrop' ? 'w-[18vw] sm:w-[14vw]' : 'w-16 sm:w-20'} h-[6vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/10 shadow-lg`}>
-                  <img 
-                    src={colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.thumbnail} 
-                    alt="Selected"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+              {(pickerStyle === 'balls' || pickerStyle === 'backdrop') && colors.find(c => c.value.toLowerCase() === value.toLowerCase()) ? (
+                <div className={`${pickerStyle === 'backdrop' ? 'w-[18vw] sm:w-[14vw]' : 'w-16 sm:w-20'} h-[6vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/10 shadow-lg flex items-center justify-center bg-slate-800`}>
+                  {(() => {
+                    const selectedItem = colors.find(c => c.value.toLowerCase() === value.toLowerCase());
+                    const imgSrc = selectedItem?.thumbnail || selectedItem?.image;
+                    if (!imgSrc) return <div className="text-[2vw] sm:text-[1vh] text-slate-500 font-bold">{selectedItem?.name}</div>;
+                    return (
+                      <img 
+                        src={imgSrc} 
+                        alt="Selected"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = document.createElement('div');
+                          fallback.className = 'text-[2vw] sm:text-[1vh] text-slate-400 font-bold uppercase p-1 text-center';
+                          fallback.innerText = selectedItem?.name || 'Selected';
+                          target.parentElement?.appendChild(fallback);
+                        }}
+                      />
+                    );
+                  })()}
                 </div>
               ) : pickerStyle === 'balls' && colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.image ? (
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/10 shadow-lg">
@@ -123,11 +137,10 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     src={colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.image} 
                     alt="Selected Ball"
                     className="w-full h-full object-contain"
-                    referrerPolicy="no-referrer"
                   />
                 </div>
               ) : (
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/20" style={{ backgroundColor: value }} />
+                <div className="w-[8vw] h-[8vw] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20" style={{ backgroundColor: value }} />
               )}
               <span className="text-[2.2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
                 {colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value}
@@ -217,34 +230,39 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 {colors.map((ball) => {
                   const isActive = value.toUpperCase() === ball.value.toUpperCase();
                   return (
-                    <button
-                      key={ball.number || ball.name}
-                      onClick={() => {
-                        onChange(ball.value);
-                        onToggle(false);
-                      }}
-                      className={`relative w-full aspect-square rounded-full transition-all duration-300 group active:scale-90 ${isActive ? 'scale-110 ring-4 ring-white ring-offset-4 ring-offset-slate-900 z-10' : 'hover:scale-110'}`}
-                      style={{ 
-                        backgroundColor: ball.value,
-                        boxShadow: '0 8px 16px rgba(0,0,0,0.5)'
-                      }}
-                      title={ball.name}
-                    >
-                      { (ball.thumbnail || ball.image) ? (
-                        <img 
-                          src={ball.thumbnail || ball.image} 
-                          alt={ball.name} 
-                          className="absolute inset-0 w-full h-full object-contain rounded-full p-0.5"
-                          referrerPolicy="no-referrer"
-                          fetchPriority="high"
-                          loading="eager"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center font-bold text-[3.5vh] text-white">
-                          {ball.number}
-                        </div>
-                      )}
-                    </button>
+                      <button
+                        key={ball.number || ball.name}
+                        onClick={() => {
+                          onChange(ball.value);
+                          onToggle(false);
+                        }}
+                        className={`relative w-full aspect-square rounded-full transition-all duration-300 group active:scale-90 ${isActive ? 'scale-110 ring-4 ring-white ring-offset-4 ring-offset-slate-900 z-10' : 'hover:scale-110'}`}
+                        style={{ 
+                          backgroundColor: ball.value,
+                          boxShadow: '0 0.8vh 1.6vh rgba(0,0,0,0.5)'
+                        }}
+                        title={ball.name}
+                      >
+                        { (ball.thumbnail || ball.image) ? (
+                          <img 
+                            src={ball.thumbnail || ball.image} 
+                            alt={ball.name} 
+                            className="absolute inset-0 w-full h-full object-contain rounded-full p-0.5"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const fallback = document.createElement('div');
+                              fallback.className = 'absolute inset-0 flex items-center justify-center font-bold text-[3vh] text-white';
+                              fallback.innerText = ball.number?.toString() || ball.name;
+                              target.parentElement?.appendChild(fallback);
+                            }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center font-bold text-[3.5vh] text-white">
+                            {ball.number}
+                          </div>
+                        )}
+                      </button>
                   );
                 })}
               </div>
@@ -262,15 +280,22 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       className={`flex flex-col gap-1 p-1 rounded-xl border-2 transition-all active:scale-95 ${isActive ? 'bg-white/20 border-white ring-2 ring-white/30' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                     >
                       <div className="w-full aspect-[16/10] rounded-lg shadow-2xl flex items-center justify-center overflow-hidden relative bg-slate-800">
-                         {b.thumbnail ? (
+                         { (b.thumbnail || b.image) ? (
                            <img 
-                             src={b.thumbnail} 
+                             src={b.thumbnail || b.image} 
                              alt={b.name} 
                              className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                             referrerPolicy="no-referrer"
+                             onError={(e) => {
+                               (e.target as HTMLImageElement).style.display = 'none';
+                               (e.target as HTMLImageElement).parentElement!.classList.add('flex', 'items-center', 'justify-center');
+                               const fallback = document.createElement('div');
+                               fallback.className = 'text-[2.2vw] sm:text-[1vh] text-slate-400 font-bold uppercase p-2 text-center';
+                               fallback.innerText = b.name;
+                               (e.target as HTMLImageElement).parentElement!.appendChild(fallback);
+                             }}
                            />
                          ) : (
-                           <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-500 font-bold uppercase">
+                           <div className="w-full h-full flex items-center justify-center text-[2.2vw] sm:text-[1vh] text-slate-500 font-bold uppercase">
                              {b.name}
                            </div>
                          )}
