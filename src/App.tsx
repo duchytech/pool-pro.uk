@@ -59,7 +59,14 @@ import {
   POOL_BALLS, 
   CLOTH_COLORS, 
   SPEED_CLOTH_COLORS,
-  FULL_SCREEN_BACKDROPS
+  FULL_SCREEN_BACKDROPS,
+  whiteBall,
+  blackBall,
+  redBall,
+  blueBall,
+  yellowBall,
+  greenTable,
+  blackTable
 } from './constants';
 import { SetupView } from './components/setup/SetupView';
 import { ColorPicker } from './components/ColorPicker';
@@ -290,9 +297,9 @@ export default function App() {
       setCurrentTime(new Date());
     }, 1000);
 
-    // Preload Pool Ball Assets
+    // Preload Critical Assets (Thumbnails and defaults)
     const preloadImage = (src: string) => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
         img.src = src;
         img.onload = resolve;
@@ -300,25 +307,53 @@ export default function App() {
       });
     };
 
-    const assetsToPreload: string[] = [];
+    const criticalAssets: string[] = [portraitBackdrop];
+    const secondaryAssets: string[] = [];
     
+    // Default backgrounds/balls should be critical
+    const defaultBalls = [whiteBall, blackBall, redBall, blueBall, yellowBall];
+    const defaultBackdrops = [greenTable, blackTable];
+
     POOL_BALLS.forEach(ball => {
-      if (ball.image) assetsToPreload.push(ball.image);
-      if (ball.thumbnail) assetsToPreload.push(ball.thumbnail);
-      if (ball.mediumImage) assetsToPreload.push(ball.mediumImage);
+      // thumbnails are critical for list rendering
+      if (ball.thumbnail) criticalAssets.push(ball.thumbnail);
+      
+      // Full images and medium images are secondary unless they are defaults
+      const isDefault = defaultBalls.includes(ball.image);
+      if (ball.image) {
+        if (isDefault) criticalAssets.push(ball.image);
+        else secondaryAssets.push(ball.image);
+      }
+      if (ball.mediumImage) {
+        if (isDefault) criticalAssets.push(ball.mediumImage);
+        else secondaryAssets.push(ball.mediumImage);
+      }
     });
 
     FULL_SCREEN_BACKDROPS.forEach(backdrop => {
-      if (backdrop.image) assetsToPreload.push(backdrop.image);
-      if (backdrop.thumbnail) assetsToPreload.push(backdrop.thumbnail);
+      if (backdrop.thumbnail) criticalAssets.push(backdrop.thumbnail);
+      
+      const isDefault = defaultBackdrops.includes(backdrop.image);
+      if (backdrop.image) {
+        if (isDefault) criticalAssets.push(backdrop.image);
+        else secondaryAssets.push(backdrop.image);
+      }
     });
 
-    assetsToPreload.push(portraitBackdrop);
-
-    // Run Preload
-    Promise.all(assetsToPreload.map(src => preloadImage(src))).then(() => {
-      console.log('All critical assets preloaded');
+    // Run Critical Preload - this blocks the loading screen
+    Promise.all(criticalAssets.map(src => preloadImage(src))).then(() => {
+      console.log('Critical assets preloaded');
       setIsLoaded(true);
+      
+      // Run Secondary Preload in background with delay - does NOT block app usage
+      // This waits until after the app has likely finished initial animations/renders
+      setTimeout(() => {
+        secondaryAssets.forEach(src => {
+          const img = new Image();
+          img.src = src;
+        });
+        console.log('Secondary assets preloading started in background');
+      }, 2000);
     });
 
     return () => {
@@ -389,8 +424,11 @@ export default function App() {
 
     const finalFsPx = Math.min(sharedLimit, maxFs);
     
+    // Apply 20% reduction for mobile to prevent overlap with match navigation (another 10% from previous 0.9)
+    const adjustedFsPx = deviceInfo.isPhone ? finalFsPx * 0.8 : finalFsPx;
+
     // Return in vh for precise vertical autoscaling
-    return `${(finalFsPx / windowSize.height) * 100}vh`;
+    return `${(adjustedFsPx / windowSize.height) * 100}vh`;
   }, [windowSize.height, windowSize.width, team1Name, team2Name, deviceInfo, isNavVisible]);
 
   const sharedPlayerNameFontSize = useMemo(() => {
@@ -1038,8 +1076,12 @@ export default function App() {
     playerPreferences, pairTrackerSettings, persistentRefereeRegistry, apiConfig
   ]);
 
+  // Debounced Save - Prevents jank on typing or rapid updates
   useEffect(() => {
-    saveState();
+    const timer = setTimeout(() => {
+      saveState();
+    }, 1000);
+    return () => clearTimeout(timer);
   }, [saveState]);
 
   // Window-level safety save
@@ -1366,7 +1408,7 @@ export default function App() {
   }, [view, selectedMatchIndex, team1Players, team2Players]); // Removed playerPreferences to prevent feedback loop
 
   // --- Sound Logic ---
-  const playBeep = useCallback((freq: number, volume = 0.012) => {
+  const playBeep = useCallback((freq: number, volume = 0.15) => {
     try {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       if (!AudioCtx) return;
@@ -3710,11 +3752,18 @@ export default function App() {
 
     // Calculate half-widths for centering widgets based on device and widget type
     const getWidgetHalfW = (type: 'clock') => {
-      // Clocks - Mobile: 24vw, Tablet: 16vw, Desktop: 20.8vw
-      if (deviceInfo.isPhone) return windowSize.width * 0.12;
-      if (deviceInfo.isTablet) return windowSize.width * 0.08;
-      return windowSize.width * 0.104;
+      if (deviceInfo.isPhone) return (windowSize.width * 0.32) / 2; 
+      if (deviceInfo.isTablet) return (windowSize.width * 0.16) / 2; 
+      return (windowSize.width * 0.14) / 2; 
     };
+
+    const getWidgetHalfH = (type: 'clock') => {
+      // Clocks are consistently ~8vh tall
+      return (windowSize.height * 0.08) / 2;
+    };
+
+    const screenCenterX = windowSize.width / 2;
+    const screenCenterY = windowSize.height / 2;
 
     const halfH = deviceInfo.isPhone ? (windowSize.height * 0.025) : (windowSize.height * 0.04);
     const gap = windowSize.height * 0.05;
@@ -3800,8 +3849,16 @@ export default function App() {
       {/* Base Background Layer */}
       <div className="fixed inset-0 z-[-20] bg-black" />
       {/* SVG Gradient Definitions */}
-      <svg width="0" height="0" className="absolute pointer-events-none">
+      <svg width="0" height="0" className="absolute pointer-events-none invisible" aria-hidden="true">
         <defs>
+          <linearGradient id="topbar-logo-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={player1.color} />
+            <stop offset="100%" stopColor={player2.color} />
+          </linearGradient>
+          <linearGradient id="topbar-cup-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={player1.color} />
+            <stop offset="100%" stopColor={player2.color} />
+          </linearGradient>
           <linearGradient id="cup-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor={player1.color} />
             <stop offset="100%" stopColor={player2.color} />
@@ -3871,11 +3928,23 @@ export default function App() {
         </motion.div>
         
         {/* Plain Background (Teams & Settings) */}
-        <div className={`absolute inset-0 bg-black transition-opacity duration-700 z-20 ${view !== 'scoreboard' ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`absolute inset-0 bg-black transition-opacity duration-700 z-0 ${view !== 'scoreboard' ? 'opacity-100' : 'opacity-0'}`} />
         
         {/* Subtle Gradient Overlay for Plain Background */}
-        <div className={`absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-from),_transparent_50%)] from-emerald-500/5 transition-opacity duration-700 z-[21] ${view !== 'scoreboard' ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-from),_transparent_50%)] from-emerald-500/5 transition-opacity duration-700 z-[1] ${view !== 'scoreboard' ? 'opacity-100' : 'opacity-0'}`} />
       </motion.div>
+
+      <AnimatePresence>
+        {activePicker && deviceInfo.isPhone && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActivePicker(null)}
+            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Navigation Bar */}
       <TopBarNav 
@@ -3968,18 +4037,18 @@ export default function App() {
               }
             }}
             initial={matchClockPosition || { 
-              x: centerX - getWidgetHalfW('clock'), 
-              y: centerY + halfH + gap - vOffset
+              x: screenCenterX - getWidgetHalfW('clock'), 
+              y: screenCenterY + (windowSize.height * 0.185) - getWidgetHalfH('clock')
             }}
             animate={matchClockPosition ? { x: matchClockPosition.x, y: matchClockPosition.y } : {
-              x: centerX - getWidgetHalfW('clock'),
-              y: centerY + halfH + gap - vOffset
+              x: screenCenterX - getWidgetHalfW('clock'),
+              y: screenCenterY + (windowSize.height * 0.185) - getWidgetHalfH('clock')
             }}
             className="fixed z-[100] cursor-move pointer-events-auto touch-none"
             style={{ left: 0, top: 0 }}
           >
             <div 
-              className="flex items-center justify-between px-1 sm:px-3 rounded-2xl bg-black border-2 shadow-2xl floating-widget"
+              className="flex items-center justify-between px-1 sm:px-3 rounded-2xl bg-black border-2 shadow-2xl floating-widget w-[32vw] sm:w-[16vw] lg:w-[14vw]"
               style={{ 
                 border: '0.125rem solid transparent',
                 backgroundImage: `linear-gradient(#000, #000), linear-gradient(${deviceInfo.isPhone ? 'to bottom' : 'to right'}, ${player1.color}, ${player2.color})`,
@@ -4025,18 +4094,18 @@ export default function App() {
               }
             }}
             initial={shotClockPosition || { 
-              x: centerX - getWidgetHalfW('clock'), 
-              y: centerY - halfH - gap - (halfH * 2) - vOffset
+              x: screenCenterX - getWidgetHalfW('clock'), 
+              y: screenCenterY - (windowSize.height * 0.185) - getWidgetHalfH('clock')
             }}
             animate={shotClockPosition ? { x: shotClockPosition.x, y: shotClockPosition.y } : {
-              x: centerX - getWidgetHalfW('clock'),
-              y: centerY - halfH - gap - (halfH * 2) - vOffset
+              x: screenCenterX - getWidgetHalfW('clock'),
+              y: screenCenterY - (windowSize.height * 0.185) - getWidgetHalfH('clock')
             }}
             className="fixed z-[100] cursor-move pointer-events-auto touch-none"
             style={{ left: 0, top: 0 }}
           >
             <div 
-              className="flex items-center justify-between px-1 sm:px-3 rounded-2xl bg-black border-2 shadow-2xl floating-widget"
+              className="flex items-center justify-between px-1 sm:px-3 rounded-2xl bg-black border-2 shadow-2xl floating-widget w-[32vw] sm:w-[16vw] lg:w-[14vw]"
               style={{ 
                 border: '0.125rem solid transparent',
                 backgroundImage: `linear-gradient(#000, #000), linear-gradient(${deviceInfo.isPhone ? 'to bottom' : 'to right'}, ${player2.color}, ${player1.color})`,
@@ -4085,19 +4154,19 @@ export default function App() {
 
 
 
-      <motion.main 
-        initial={false}
-        animate={{ 
-          paddingTop: (view === 'teams' || view === 'settings' || view === 'match-details')
+        <motion.main 
+          initial={false}
+          animate={{ 
+            paddingTop: (view === 'teams' || view === 'settings' || view === 'match-details')
             ? `calc(${deviceInfo.isPhone ? '24vh' : (deviceInfo.isTablet ? '8vh' : '10vh')} + ${view === 'match-details' ? '1vh' : '4vh'})`
             : (view === 'scoreboard' && isNavVisible)
-              ? (deviceInfo.isPhone ? '15vh' : (deviceInfo.isTablet ? '8vh' : '10vh'))
-              : 0,
-          y: 0,
-          paddingBottom: 0 
-        }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        className={`relative z-10 min-h-[100dvh] flex flex-col ${view === 'scoreboard' ? 'justify-center gap-4' : 'justify-start pb-24'} ${(view === 'teams' || view === 'settings' || view === 'match-details') ? 'px-0' : 'px-4 sm:px-6'} mx-auto w-full`}
+            ? (deviceInfo.isPhone ? '15vh' : (deviceInfo.isTablet ? '8vh' : '10vh'))
+               : 0,
+            y: 0,
+            paddingBottom: 0 
+          }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className={`relative ${activePicker ? 'z-[80]' : 'z-10'} min-h-[100dvh] flex flex-col ${view === 'scoreboard' ? 'justify-center gap-4' : 'justify-start pb-24'} ${(view === 'teams' || view === 'settings' || view === 'match-details') ? 'px-0' : 'px-4 sm:px-6'} mx-auto w-full`}
         style={{ 
           maxWidth: (view === 'teams' || view === 'settings' || view === 'match-details') ? '95vw' : (view === 'scoreboard' ? '100%' : 'min(95vw, 62rem)'),
           width: (view === 'teams' || view === 'settings' || view === 'match-details') ? '95vw' : 'auto',
@@ -4116,7 +4185,7 @@ export default function App() {
             >
               {/* Fixed Match Navigation Buttons - 1vh below top bar, 1vh from edge */}
               <div 
-                className="fixed inset-x-0 flex justify-between px-[1vh] pointer-events-none z-50 transition-all duration-500"
+                className="fixed inset-x-0 flex justify-between px-[1vh] pointer-events-none z-[30001] transition-all duration-500"
                 style={{ 
                   top: isNavVisible 
                     ? (deviceInfo.isPhone ? '17vh' : (deviceInfo.isTablet ? '9vh' : '11vh'))
@@ -4609,11 +4678,10 @@ export default function App() {
                     Colour Preferences
                   </h3>
 
-                  {/* Full Screen Backdrops Tile */}
-                  <div 
-                    className={`bg-black/80 backdrop-blur-md border-2 rounded-2xl sm:rounded-[2rem] px-[3vw] pb-[6vw] sm:pb-[3vw] pt-[1vw] shadow-xl relative transition-all duration-300 ${activePicker === 'fs-backdrop' ? 'z-[40] ring-4 ring-white/10' : 'z-10'}`} 
-                    style={{ borderColor: player1.color }}
-                  >
+            <div 
+              className={`bg-black/80 backdrop-blur-md border-2 rounded-2xl sm:rounded-[2rem] px-[3vw] pb-[6vw] sm:pb-[3vw] pt-[1vw] shadow-xl relative transition-all duration-300 ${activePicker === 'fs-backdrop' ? 'z-[50] ring-4 ring-white/10' : 'z-10'}`} 
+              style={{ borderColor: player1.color }}
+            >
                     <div className="w-full text-center border-b border-white/5 pb-[1vw] mb-[3vw]">
                       <p className="font-black text-slate-200 uppercase tracking-tight leading-none" style={{ fontSize: deviceInfo.titleSizes.tile }}>Full Screen Backdrops</p>
                     </div>
@@ -4702,7 +4770,7 @@ export default function App() {
                             }
                           }}
                           placeholder={`PLAYER ${idx + 1} NAME`}
-                          className="w-full bg-slate-950/30 border-2 rounded-2xl px-6 py-3 text-2xl font-black focus:outline-none uppercase transition-all shadow-inner"
+                          className="w-full bg-slate-950/30 border-2 rounded-2xl px-6 py-3 text-base sm:text-2xl font-black focus:outline-none uppercase transition-all shadow-inner"
                           style={{ 
                             borderColor: p.color + '33',
                             color: 'white'
@@ -5008,7 +5076,7 @@ export default function App() {
                           <input 
                             type="range" 
                             min="300" 
-                            max="3600" 
+                            max="18000" 
                             step="300"
                             value={matchClockDuration}
                             onChange={(e) => {
@@ -5021,8 +5089,8 @@ export default function App() {
                           />
                           <div className="flex justify-between text-[0.625rem] font-black text-slate-600 uppercase tracking-[0.2em]">
                             <span>5m</span>
-                            <span>30m</span>
-                            <span>60m</span>
+                            <span>150m</span>
+                            <span>300m</span>
                           </div>
                           <button 
                             onClick={resetMatchClock}

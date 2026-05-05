@@ -93,21 +93,22 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   return (
     <div className={`relative w-full ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}`} ref={containerRef}>
-      <div className="flex items-center justify-between p-[2vh] bg-slate-950/30 rounded-xl border transition-all cursor-pointer group active:scale-[0.98] w-full"
-           style={{ 
-             borderColor: isOpen ? (themeColor || '#10b981') : 'rgba(255,255,255,0.05)',
-           }}
-           onClick={() => !disabled && onToggle(!isOpen)}>
-        <div className="flex items-center gap-[1vw]">
-          <div className="p-[1.5vh] bg-slate-800 rounded-lg text-slate-400 transition-colors"
+      <div 
+        className="flex items-center justify-between p-[1.5vh] bg-slate-950/30 rounded-xl border transition-all cursor-pointer group active:scale-[0.98] w-full touch-manipulation"
+        style={{ 
+          borderColor: isOpen ? (themeColor || '#10b981') : 'rgba(255,255,255,0.05)',
+        }}
+        onPointerDown={(e) => { e.stopPropagation(); !disabled && onToggle(!isOpen); }}>
+        <div className="flex items-center gap-[2vw]">
+          <div className="p-[1.2vh] bg-slate-800 rounded-lg text-slate-400 transition-colors"
                style={{ color: isOpen ? (themeColor || '#10b981') : undefined }}>
             {icon}
           </div>
-          <div>
+          <div className="flex flex-col items-start">
             {pickerStyle !== 'backdrop' && (
-              <p className="font-bold uppercase tracking-wider text-slate-500 text-[2vw] sm:text-[1.5vh]">{label}</p>
+              <p className="font-bold uppercase tracking-wider text-slate-500 text-[1.05vh] leading-none mb-1">{label}</p>
             )}
-            <div className={`flex items-center gap-[3vw] sm:gap-[1vw] transition-all h-[7vh] sm:h-[10vh]`}>
+            <div className={`flex items-center gap-[3vw] sm:gap-[1.5vw] transition-all h-[6vh] sm:h-[10vh]`}>
               {(() => {
                 const selectedItem = colors.find(c => c.value.toLowerCase() === value.toLowerCase());
                 
@@ -115,7 +116,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 if (pickerStyle === 'backdrop' && selectedItem) {
                   const imgSrc = selectedItem.thumbnail || selectedItem.image;
                   return (
-                    <div className="w-[15vw] sm:w-[14vw] h-[6.5vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/20 shadow-lg flex items-center justify-center bg-slate-800 shrink-0">
+                    <div className="w-[18vw] sm:w-[14vw] h-[5.5vh] sm:h-[8vh] rounded-lg overflow-hidden border border-white/20 shadow-lg flex items-center justify-center bg-slate-800 shrink-0">
                       {imgSrc ? (
                         <img 
                           src={imgSrc} 
@@ -132,7 +133,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 // 2. BALLS STYLE - Circular preview
                 else if (pickerStyle === 'balls' && selectedItem && (selectedItem.thumbnail || selectedItem.image)) {
                   return (
-                    <div className="w-[10vw] h-[10vw] min-w-[36px] min-h-[36px] sm:w-12 sm:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg bg-slate-800 shrink-0">
+                    <div className="w-[4.8vh] h-[4.8vh] min-w-[24px] min-h-[24px] sm:w-[7vh] sm:h-[7vh] rounded-full overflow-hidden border border-white/20 shadow-lg bg-slate-800 shrink-0">
                       <img 
                         src={selectedItem.thumbnail || selectedItem.image} 
                         alt="Selected Ball"
@@ -145,18 +146,18 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 // 3. DEFAULT (PLAYER COLORS) STYLE - Circular swatch
                 return (
                   <div 
-                    className="w-[8.5vw] h-[8.5vw] min-w-[32px] min-h-[32px] sm:w-[5vh] sm:h-[5vh] rounded-full border border-white/20 shadow-inner shrink-0" 
+                    className="w-[4vh] h-[4vh] min-w-[20px] min-h-[20px] sm:w-[6vh] sm:h-[6vh] rounded-full border border-white/20 shadow-inner shrink-0" 
                     style={{ backgroundColor: value }} 
                   />
                 );
               })()}
-              <span className="text-[2.2vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[45vw]">
+              <span className="text-[1.05vh] sm:text-lg font-black text-slate-200 uppercase leading-none truncate max-w-[40vw]">
                 {colors.find(c => c.value.toLowerCase() === value.toLowerCase())?.name || value}
               </span>
             </div>
           </div>
         </div>
-        <ChevronDown className={`w-[2vh] h-[2vh] sm:w-5 sm:h-5 text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-[2.5vh] h-[2.5vh] sm:w-6 sm:h-6 text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
       <AnimatePresence>
@@ -169,12 +170,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               scale: 1 
             }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className={`absolute top-full mt-[1.5vh] z-[200] bg-slate-900 border rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col items-center origin-top
+            className={`absolute top-full mt-[1vh] z-[100] bg-slate-900 border rounded-2xl shadow-2xl backdrop-blur-xl flex flex-col origin-top inset-x-0
               ${pickerStyle === 'default' 
-                ? 'py-4 sm:py-[2.5vh] gap-4 px-[6%]' 
-                : pickerStyle === 'backdrop' ? 'pt-3 pb-8 gap-3 px-[4%]' : 'pt-4 pb-8 gap-4 px-[6%]' 
+                ? (isMobile ? 'py-3 gap-3 px-3' : 'py-4 sm:py-[2.5vh] gap-4 px-[6%]')
+                : pickerStyle === 'backdrop' ? (isMobile ? 'pt-2 pb-4 gap-2 px-2' : 'pt-3 pb-8 gap-3 px-[4%]') : (isMobile ? 'pt-3 pb-4 gap-3 px-2' : 'pt-4 pb-8 gap-4 px-[6%]') 
               }
-              ${isMobile ? 'fixed left-4 right-4 w-auto' : 'inset-x-0'}
+              ${isMobile ? 'items-center' : 'items-start'}
             `}
             style={{ 
               borderColor: (themeColor || '#10b981') + '33',
@@ -235,7 +236,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 })}
               </div>
             ) : pickerStyle === 'balls' ? (
-              <div className="grid grid-cols-3 gap-[3vh] w-full max-h-[60vh] overflow-y-auto no-scrollbar p-2">
+              <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-3'} gap-3 w-full max-h-[60vh] overflow-y-auto no-scrollbar p-2`}>
                 {colors.map((ball) => {
                   const isActive = value.toUpperCase() === ball.value.toUpperCase();
                   return (
@@ -248,7 +249,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                         className={`relative w-full aspect-square rounded-full transition-all duration-300 group active:scale-90 ${isActive ? 'scale-110 ring-4 ring-white ring-offset-4 ring-offset-slate-900 z-10' : 'hover:scale-110'}`}
                         style={{ 
                           backgroundColor: ball.value,
-                          boxShadow: '0 0.8vh 1.6vh rgba(0,0,0,0.5)'
+                          boxShadow: '0 0.5vh 1vh rgba(0,0,0,0.5)'
                         }}
                         title={ball.name}
                       >
@@ -261,13 +262,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
                               const fallback = document.createElement('div');
-                              fallback.className = 'absolute inset-0 flex items-center justify-center font-bold text-[3vh] text-white';
+                              fallback.className = 'absolute inset-0 flex items-center justify-center font-bold text-[2.5vh] text-white';
                               fallback.innerText = ball.number?.toString() || ball.name;
                               target.parentElement?.appendChild(fallback);
                             }}
                           />
                         ) : (
-                          <div className="absolute inset-0 flex items-center justify-center font-bold text-[3.5vh] text-white">
+                          <div className="absolute inset-0 flex items-center justify-center font-bold text-[3vh] text-white">
                             {ball.number}
                           </div>
                         )}
@@ -276,7 +277,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 })}
               </div>
             ) : pickerStyle === 'backdrop' ? (
-              <div className="grid grid-cols-4 gap-2 sm:gap-4 w-full max-h-[60vh] overflow-y-auto no-scrollbar p-3">
+              <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-2 sm:gap-4 w-full max-h-[60vh] overflow-y-auto no-scrollbar p-3`}>
                 {colors.map((b) => {
                   const isActive = value.toLowerCase() === b.value.toLowerCase();
                   return (

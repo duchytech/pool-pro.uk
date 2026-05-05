@@ -1,7 +1,7 @@
 // Asset Paths (WebP from public folder)
-const redBall = '/assets/balls/big_balls/red_poolball.webp';
-const redBallThumb = '/assets/balls/mini_balls/red_poolball_thumb.webp';
-const redBallMedium = '/assets/balls/medium_balls/red_poolball_medium.webp';
+export const redBall = '/assets/balls/big_balls/red_poolball.webp';
+export const redBallThumb = '/assets/balls/mini_balls/red_poolball_thumb.webp';
+export const redBallMedium = '/assets/balls/medium_balls/red_poolball_medium.webp';
 
 const redishBall = '/assets/balls/big_balls/redish_poolball.webp';
 const redishBallThumb = '/assets/balls/mini_balls/redish_poolball_thumb.webp';
@@ -27,9 +27,9 @@ const brightYellowBall = '/assets/balls/big_balls/yellow_bright_poolball.webp';
 const brightYellowBallThumb = '/assets/balls/mini_balls/yellow_bright_poolball_thumb.webp';
 const brightYellowBallMedium = '/assets/balls/medium_balls/yellow_bright_poolball_medium.webp';
 
-const yellowBall = '/assets/balls/big_balls/yellow_poolball.webp';
-const yellowBallThumb = '/assets/balls/mini_balls/yellow_poolball_thumb.webp';
-const yellowBallMedium = '/assets/balls/medium_balls/yellow_poolball_medium.webp';
+export const yellowBall = '/assets/balls/big_balls/yellow_poolball.webp';
+export const yellowBallThumb = '/assets/balls/mini_balls/yellow_poolball_thumb.webp';
+export const yellowBallMedium = '/assets/balls/medium_balls/yellow_poolball_medium.webp';
 
 const brightGreenBall = '/assets/balls/big_balls/green_bright_poolball.webp';
 const brightGreenBallThumb = '/assets/balls/mini_balls/green_bright_poolball_thumb.webp';
@@ -39,9 +39,9 @@ const greenBall = '/assets/balls/big_balls/green_poolball.webp';
 const greenBallThumb = '/assets/balls/mini_balls/green_poolball_thumb.webp';
 const greenBallMedium = '/assets/balls/medium_balls/green_poolball_medium.webp';
 
-const blueBall = '/assets/balls/big_balls/dark_blue_poolball.webp';
-const blueBallThumb = '/assets/balls/mini_balls/dark_blue_poolball_thumb.webp';
-const blueBallMedium = '/assets/balls/medium_balls/dark_blue_poolball_medium.webp';
+export const blueBall = '/assets/balls/big_balls/dark_blue_poolball.webp';
+export const blueBallThumb = '/assets/balls/mini_balls/dark_blue_poolball_thumb.webp';
+export const blueBallMedium = '/assets/balls/medium_balls/dark_blue_poolball_medium.webp';
 
 const lilacBall = '/assets/balls/big_balls/lilac_poolball.webp';
 const lilacBallThumb = '/assets/balls/mini_balls/lilac_poolball_thumb.webp';
@@ -59,30 +59,30 @@ const pinkBall = '/assets/balls/big_balls/pink_poolball.webp';
 const pinkBallThumb = '/assets/balls/mini_balls/pink_poolball_thumb.webp';
 const pinkBallMedium = '/assets/balls/medium_balls/pink_poolball_medium.webp';
 
-const whiteBall = '/assets/balls/big_balls/white_poolball.webp';
-const whiteBallThumb = '/assets/balls/mini_balls/white_poolball_thumb.webp';
-const whiteBallMedium = '/assets/balls/medium_balls/white_poolball_medium.webp';
+export const whiteBall = '/assets/balls/big_balls/white_poolball.webp';
+export const whiteBallThumb = '/assets/balls/mini_balls/white_poolball_thumb.webp';
+export const whiteBallMedium = '/assets/balls/medium_balls/white_poolball_medium.webp';
 
-const blackBall = '/assets/balls/big_balls/black-Poolball.webp';
-const blackBallThumb = '/assets/balls/mini_balls/black-Poolball_thumb.webp';
-const blackBallMedium = '/assets/balls/medium_balls/black-Poolball_medium.webp';
+export const blackBall = '/assets/balls/big_balls/black-Poolball.webp';
+export const blackBallThumb = '/assets/balls/mini_balls/black-Poolball_thumb.webp';
+export const blackBallMedium = '/assets/balls/medium_balls/black-Poolball_medium.webp';
 
-const blackTable = '/assets/tables/big_tables/black_pool_table.webp';
-const blackTableThumb = '/assets/tables/mini_tables/black_pool_table_thumb.webp';
-const blueTable = '/assets/tables/big_tables/blue_pool_table.webp';
-const blueTableThumb = '/assets/tables/mini_tables/blue_pool_table_thumb.webp';
-const blueLightTable = '/assets/tables/big_tables/blue_light_pool_table.webp';
-const blueLightTableThumb = '/assets/tables/mini_tables/blue_light_pool_table_thumb.webp';
-const greenTable = '/assets/tables/big_tables/green_pool_table.webp';
-const greenTableThumb = '/assets/tables/mini_tables/green_pool_table_thumb.webp';
+export const blackTable = '/assets/tables/big_tables/black_pool_table.webp';
+export const blackTableThumb = '/assets/tables/mini_tables/black_pool_table_thumb.webp';
+export const blueTable = '/assets/tables/big_tables/blue_pool_table.webp';
+export const blueTableThumb = '/assets/tables/mini_tables/blue_pool_table_thumb.webp';
+export const blueLightTable = '/assets/tables/big_tables/blue_light_pool_table.webp';
+export const blueLightTableThumb = '/assets/tables/mini_tables/blue_light_pool_table_thumb.webp';
+export const greenTable = '/assets/tables/big_tables/green_pool_table.webp';
+export const greenTableThumb = '/assets/tables/mini_tables/green_pool_table_thumb.webp';
 const greyLightTable = '/assets/tables/big_tables/grey_light_pool_table.webp';
 const greyLightTableThumb = '/assets/tables/mini_tables/grey_light_pool_table_thumb.webp';
 const pinkTable = '/assets/tables/big_tables/pink_pool_table.webp';
 const pinkTableThumb = '/assets/tables/mini_tables/pink_pool_table_thumb.webp';
 const purpleTable = '/assets/tables/big_tables/purple_pool_table.webp';
 const purpleTableThumb = '/assets/tables/mini_tables/purple_pool_table_thumb.webp';
-const redTable = '/assets/tables/big_tables/red_pool_table.webp';
-const redTableThumb = '/assets/tables/mini_tables/red_pool_table_thumb.webp';
+export const redTable = '/assets/tables/big_tables/red_pool_table.webp';
+export const redTableThumb = '/assets/tables/mini_tables/red_pool_table_thumb.webp';
 const chequerTable = '/assets/tables/big_tables/chequer_pool_table.webp';
 const chequerTableThumb = '/assets/tables/mini_tables/chequer_pool_table_thumb.webp';
 const englandTable = '/assets/tables/big_tables/england_pool_table.webp';

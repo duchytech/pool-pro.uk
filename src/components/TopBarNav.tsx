@@ -44,7 +44,7 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
         opacity: 1
       }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="fixed top-0 left-0 right-0 bg-slate-950/90 backdrop-blur-2xl z-50 flex items-center justify-between pl-[0.5vw] pr-[0.5vw] shadow-[0_0.4vh_3vh_rgba(0,0,0,0.5)] border-b border-white/5"
+      className="fixed top-0 left-0 right-0 bg-slate-950/90 backdrop-blur-2xl z-[50] flex items-center justify-between pl-[0.5vw] pr-[0.5vw] shadow-[0_0.4vh_3vh_rgba(0,0,0,0.5)] border-b border-white/5"
       style={{ 
         height: deviceInfo.isPhone ? '15vh' : (deviceInfo.isTablet ? '8vh' : '10vh')
       }}
@@ -71,16 +71,6 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             preserveAspectRatio="xMinYMid meet"
             className="w-auto overflow-visible"
           >
-            <defs>
-              <linearGradient id="topbar-logo-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={player1.color} />
-                <stop offset="100%" stopColor={player2.color} />
-              </linearGradient>
-              <linearGradient id="topbar-cup-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={player1.color} />
-                <stop offset="100%" stopColor={player2.color} />
-              </linearGradient>
-            </defs>
               <text 
                 x="0" 
                 y="32" 
@@ -102,16 +92,16 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
       <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 flex items-center pointer-events-none">
         {!deviceInfo.shouldHideDeviceTime && (
           <div 
-            className="flex items-center justify-center px-4 bg-black/40 border border-white/10 backdrop-blur-md pointer-events-auto shadow-2xl"
+            className="flex items-center justify-center px-1.5 sm:px-4 bg-black/40 border border-white/10 backdrop-blur-md pointer-events-auto shadow-2xl max-w-[25vw] sm:max-w-none"
             style={{ 
-              height: deviceInfo.isPhone ? '11.05vh' : (deviceInfo.isTablet ? '6.8vh' : '8.5vh'),
-              borderRadius: deviceInfo.isPhone ? '2.25vh' : '1.5vh'
+              height: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.8vh' : '8.5vh'),
+              borderRadius: deviceInfo.isPhone ? '1.5vh' : '1.5vh'
             }}
           >
             <span 
-              className="font-mono font-black text-white tracking-wider tabular-nums leading-none"
+              className="font-mono font-black text-white tracking-wider tabular-nums leading-none truncate"
               style={{
-                fontSize: deviceInfo.isPhone ? '7.15vh' : (deviceInfo.isTablet ? '4.4vh' : '5.5vh')
+                fontSize: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.4vh' : '5.5vh')
               }}
             >
               {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
@@ -122,12 +112,12 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
       
       <div className="flex items-center gap-[1vw] shrink-0 ml-auto mr-[0.5vw]">
         <button 
-          onClick={toggleFullscreen}
-          className="group flex items-center justify-center transition-all duration-300 border border-white/10 bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative"
+          onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }}
+          className="group flex items-center justify-center transition-all duration-300 border border-white/10 bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative touch-manipulation"
           style={{
-            width: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            height: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            borderRadius: deviceInfo.isPhone ? '2.25vh' : '1.5vh'
+            width: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            height: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            borderRadius: deviceInfo.isPhone ? '1.5vh' : '1.5vh'
           }}
         >
           <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -136,28 +126,28 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
               className="relative z-10 transition-transform group-hover:scale-110"
               style={{ 
                 stroke: 'url(#topbar-cup-gradient)',
-                width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
-                height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
+                width: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
+                height: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
               }} 
             /> : 
             <Maximize 
               className="relative z-10 transition-transform group-hover:scale-110"
               style={{ 
                 stroke: 'url(#topbar-cup-gradient)',
-                width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
-                height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
+                width: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
+                height: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
               }} 
             />
           }
         </button>
         <button 
-          onClick={navigateToScoreboard}
-          className={`group flex items-center justify-center transition-all duration-300 border ${view === 'scoreboard' ? 'border-white/30' : 'border-white/10'} bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative`}
+          onClick={(e) => { e.stopPropagation(); navigateToScoreboard(); }}
+          className={`group flex items-center justify-center transition-all duration-300 border ${view === 'scoreboard' ? 'border-white/30' : 'border-white/10'} bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative touch-manipulation`}
           style={{
             backgroundColor: view === 'scoreboard' ? `${player1.color}22` : undefined,
-            width: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            height: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            borderRadius: deviceInfo.isPhone ? '2.25vh' : '1.5vh'
+            width: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            height: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            borderRadius: deviceInfo.isPhone ? '1.5vh' : '1.5vh'
           }}
         >
           <div className={`absolute inset-0 transition-opacity ${view === 'scoreboard' ? 'opacity-20' : 'opacity-0'} group-hover:opacity-10`} style={{ backgroundColor: player1.color }} />
@@ -165,19 +155,19 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             className="relative z-10 transition-transform group-hover:scale-110"
             style={{ 
               stroke: 'url(#topbar-cup-gradient)',
-              width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
-              height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
+              width: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
+              height: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
             }} 
           />
         </button>
         <button 
-          onClick={() => navigateToView('teams')}
-          className={`group flex items-center justify-center transition-all duration-300 border ${view === 'teams' ? 'border-white/30' : 'border-white/10'} bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative`}
+          onClick={(e) => { e.stopPropagation(); navigateToView('teams'); }}
+          className={`group flex items-center justify-center transition-all duration-300 border ${view === 'teams' ? 'border-white/30' : 'border-white/10'} bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative touch-manipulation`}
           style={{
             backgroundColor: view === 'teams' ? `${player1.color}22` : undefined,
-            width: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            height: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            borderRadius: deviceInfo.isPhone ? '2.25vh' : '1.5vh'
+            width: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            height: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            borderRadius: deviceInfo.isPhone ? '1.5vh' : '1.5vh'
           }}
         >
           <div className={`absolute inset-0 transition-opacity ${view === 'teams' ? 'opacity-20' : 'opacity-0'} group-hover:opacity-10`} style={{ backgroundColor: player1.color }} />
@@ -185,19 +175,19 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             className="relative z-10 transition-transform group-hover:scale-110"
             style={{ 
               stroke: 'url(#topbar-cup-gradient)',
-              width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
-              height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
+              width: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
+              height: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
             }} 
           />
         </button>
         <button 
-          onClick={() => navigateToView('settings')}
-          className={`group flex items-center justify-center transition-all duration-300 border ${view === 'settings' ? 'border-white/30' : 'border-white/10'} bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative`}
+          onClick={(e) => { e.stopPropagation(); navigateToView('settings'); }}
+          className={`group flex items-center justify-center transition-all duration-300 border ${view === 'settings' ? 'border-white/30' : 'border-white/10'} bg-slate-900/50 hover:bg-slate-800 active:scale-95 shadow-lg overflow-hidden relative touch-manipulation`}
           style={{
             backgroundColor: view === 'settings' ? `${player2.color}22` : undefined,
-            width: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            height: deviceInfo.isPhone ? '12vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
-            borderRadius: deviceInfo.isPhone ? '2.25vh' : '1.5vh'
+            width: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            height: deviceInfo.isPhone ? '10vh' : (deviceInfo.isTablet ? '6.4vh' : '8vh'),
+            borderRadius: deviceInfo.isPhone ? '1.5vh' : '1.5vh'
           }}
         >
           <div className={`absolute inset-0 transition-opacity ${view === 'settings' ? 'opacity-20' : 'opacity-0'} group-hover:opacity-10`} style={{ backgroundColor: player2.color }} />
@@ -205,8 +195,8 @@ export const TopBarNav: React.FC<TopBarNavProps> = ({
             className="relative z-10 transition-transform group-hover:scale-110"
             style={{ 
               stroke: 'url(#topbar-cup-gradient)',
-              width: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
-              height: deviceInfo.isPhone ? '7.2vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
+              width: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh'),
+              height: deviceInfo.isPhone ? '6vh' : (deviceInfo.isTablet ? '4.8vh' : '6vh')
             }} 
           />
         </button>
