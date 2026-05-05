@@ -1253,6 +1253,10 @@ export default function App() {
     if (settings.breakBalls) {
       setBreakBalls(settings.breakBalls);
     }
+    
+    // Load frame details for the selected matchup
+    setCurrentMatchFrameDetails(settings.frameDetails || []);
+
     // In Match Mode, we use session-wide deterministic logic if matchModeBreakSide is set,
     // so we only load from individual match settings if it's NOT Match Mode or no session logic exists.
     if (settings.currentBreakPlayerId && (activeSetupTab !== 'match' || matchModeBreakSide === 'none')) {

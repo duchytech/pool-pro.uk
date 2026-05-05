@@ -206,12 +206,15 @@ export const SetupView: React.FC<SetupViewProps> = (props) => {
               {/* Header Row */}
               <div className="flex items-center bg-slate-900/80 border-b-2 border-slate-800 font-black">
                 <div className="hidden sm:flex px-[1vw] py-[2vh] text-[2vw] sm:text-xs lg:text-[0.85rem] uppercase tracking-[0.2em] text-slate-400 w-[6%] shrink-0 items-center">No.</div>
-                <div className="flex px-[1vw] py-[2vh] text-slate-400 w-[8%] sm:w-[6%] shrink-0 items-center justify-center uppercase tracking-widest text-[1.5vw] sm:text-[0.625rem]">
-                  Select
-                </div>
-                {(activeSetupTab === 'match' || activeSetupTab === 'group') && (
-                  <div className="flex px-[0.5vw] py-[2vh] text-[2vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-400 justify-center w-[12%] sm:w-[10%] shrink-0 items-center" title="Referee">Ref</div>
+                
+                {activeSetupTab === 'group' && (
+                  <div className="flex px-[1vw] py-[2vh] text-slate-400 w-[8%] sm:w-[6%] shrink-0 items-center justify-center uppercase tracking-widest text-[1.5vw] sm:text-[0.625rem]">
+                    Select
+                  </div>
                 )}
+                
+                <div className="flex px-[0.5vw] py-[2vh] text-[2vw] sm:text-[0.85rem] uppercase tracking-widest text-slate-400 justify-center w-[12%] sm:w-[10%] shrink-0 items-center" title="Referee">Ref</div>
+                
                 <div className="flex px-[1.5vw] py-[2vh] text-[3vw] sm:text-[0.85rem] uppercase tracking-widest flex-1 min-w-0 items-center truncate text-white">
                   <span>{activeSetupTab === 'group' ? 'SIDE A' : (team1Name || 'TEAM A')}</span>
                 </div>
@@ -253,25 +256,25 @@ export const SetupView: React.FC<SetupViewProps> = (props) => {
                           const rowBreaker = matchModeBreakSide === 'none' ? 'none' : ((idx % 2 === 0) ? matchModeBreakSide : (matchModeBreakSide === '1' ? '2' : '1'));
 
                           return (
-                            <div key={idx} onClick={() => selectTeamMatch(idx)} className={`group flex items-center cursor-pointer transition-all border-b border-slate-800/30 font-bold last:border-0 hover:bg-emerald-500/5 ${selectedMatchIndex === idx ? 'bg-emerald-500/10' : ''}`}>
+                            <div key={idx} onClick={() => selectTeamMatch(idx)} className={`group flex items-center cursor-pointer transition-all border-b border-slate-800/30 font-bold last:border-0 hover:bg-emerald-500/5 ${activeSetupTab === 'group' && selectedMatchIndex === idx ? 'bg-emerald-500/10' : ''}`}>
                               <div className="hidden sm:flex px-[1vw] py-[2vh] text-[2vw] sm:text-xs font-black text-slate-600 w-[6%] shrink-0 items-center whitespace-nowrap">#{idx + 1}</div>
-                              <div className="flex px-[1vw] py-[2vh] w-[8%] sm:w-[6%] shrink-0 items-center justify-center">
-                                <div onClick={(e) => { e.stopPropagation(); selectTeamMatch(idx, true); }} className={`w-[7vw] h-[7vw] sm:w-[3.5vw] sm:h-[3.5vw] rounded-full border-[0.3vh] sm:border-[0.2vh] transition-all flex items-center justify-center shrink-0 ${selectedMatchIndex === idx ? 'border-emerald-500 bg-emerald-500/20 shadow-[0_0_1.5vw_rgba(16,185,129,0.3)]' : 'border-slate-700 hover:border-slate-500'}`}>
-                                  {selectedMatchIndex === idx && <div className="w-[4.5vw] h-[4.5vw] sm:w-[2vw] sm:h-[2vw] rounded-full bg-emerald-500 shadow-[0_0_1.5vw_rgba(16,185,129,0.8)]" />}
-                                </div>
-                              </div>
-                              
-                              {(activeSetupTab === 'match' || activeSetupTab === 'group') && (
-                                <div className="flex px-[0.5vw] py-[2vh] justify-center w-[12%] sm:w-[10%] shrink-0 items-center" onClick={(e) => { e.stopPropagation(); props.setShowRefereePicker({ isOpen: true, matchIndex: idx, side: '1' }); }}>
-                                  {effectiveReferee ? <span className="text-[3vw] sm:text-sm font-black text-amber-500 uppercase truncate">{effectiveReferee.name}</span> : <Glasses className="w-[6vw] h-[6vw] sm:w-[2.5vw] sm:h-[2.5vw] text-orange-500 animate-pulse drop-shadow-[0_0_0.8vw_rgba(249,115,22,0.6)]" />}
+                              {activeSetupTab === 'group' && (
+                                <div className="flex px-[1vw] py-[2vh] w-[8%] sm:w-[6%] shrink-0 items-center justify-center">
+                                  <div onClick={(e) => { e.stopPropagation(); selectTeamMatch(idx, true); }} className={`w-[7vw] h-[7vw] sm:w-[3.5vw] sm:h-[3.5vw] rounded-full border-[0.3vh] sm:border-[0.2vh] transition-all flex items-center justify-center shrink-0 ${selectedMatchIndex === idx ? 'border-emerald-500 bg-emerald-500/20 shadow-[0_0_1.5vw_rgba(16,185,129,0.3)]' : 'border-slate-700 hover:border-slate-500'}`}>
+                                    {selectedMatchIndex === idx && <div className="w-[4.5vw] h-[4.5vw] sm:w-[2vw] sm:h-[2vw] rounded-full bg-emerald-500 shadow-[0_0_1.5vw_rgba(16,185,129,0.8)]" />}
+                                  </div>
                                 </div>
                               )}
+                              
+                              <div className="flex px-[0.5vw] py-[2vh] justify-center w-[12%] sm:w-[10%] shrink-0 items-center" onClick={(e) => { e.stopPropagation(); props.setShowRefereePicker({ isOpen: true, matchIndex: idx, side: '1' }); }}>
+                                {effectiveReferee ? <span className="text-[3vw] sm:text-sm font-black text-amber-500 uppercase truncate">{effectiveReferee.name}</span> : <Glasses className="w-[6vw] h-[6vw] sm:w-[2.5vw] sm:h-[2.5vw] text-orange-500 animate-pulse drop-shadow-[0_0_0.8vw_rgba(249,115,22,0.6)]" />}
+                              </div>
 
                               <div 
                                 className="flex px-[1.5vw] py-[2vh] text-[3vw] sm:text-sm text-slate-100 uppercase font-bold group-hover:text-emerald-400 transition-colors flex-1 min-w-0 items-center overflow-hidden"
                                 onClick={(e) => { e.stopPropagation(); selectTeamMatch(idx); }}
                               >
-                                {isBreakTrackingEnabled && (activeSetupTab === 'match' || activeSetupTab === 'group') && rowBreaker === '1' && (
+                                {isBreakTrackingEnabled && rowBreaker === '1' && (
                                   <div className="mr-2 shrink-0"><div className="w-[1vw] h-[1vw] rounded-full bg-white shadow-[0_0_0.8vw_white]" /></div>
                                 )}
                                 <span className={`truncate ${selectedMatchIndex === idx ? 'text-emerald-400' : ''}`}>{p1Name || <span className="text-slate-700 italic">EMPTY</span>}</span>
@@ -284,7 +287,7 @@ export const SetupView: React.FC<SetupViewProps> = (props) => {
                                 onClick={(e) => { e.stopPropagation(); selectTeamMatch(idx); }}
                               >
                                 <span className={`truncate ${selectedMatchIndex === idx ? 'text-emerald-400' : ''}`}>{p2Name || <span className="text-slate-700 italic">EMPTY</span>}</span>
-                                {isBreakTrackingEnabled && (activeSetupTab === 'match' || activeSetupTab === 'group') && rowBreaker === '2' && (
+                                {isBreakTrackingEnabled && rowBreaker === '2' && (
                                   <div className="ml-2 shrink-0"><div className="w-[1vw] h-[1vw] rounded-full bg-white shadow-[0_0_0.8vw_white]" /></div>
                                 )}
                               </div>
